@@ -1,0 +1,12 @@
+Just adding a couple of thoughts so I don't forget 
+  The intersection table:
+      Racked my brain on this for a minute. We are not calling anything from it so it doesn't seem like it is doing anything. Will revisit this when I get some rest.
+      
+  Math in the table:
+      I think we should be able to multiply the productQuantity by the boxPrice to give us productPrice in the Products table. Need to look more into this.
+      
+ Box table:
+      This table has a finite number of box types that the rest of the sql can pull. We may need to identify this as a fixed table or something.
+      
+HTML:
+   We should be good to go with what we have right now to complete project step 3 frontend. We will need to resolve our database issues before we get full implementation though.
