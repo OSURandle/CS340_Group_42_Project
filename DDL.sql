@@ -75,8 +75,7 @@ CREATE OR REPLACE TABLE Purchases(
     ON DELETE CASCADE
 );
 
---Insert Data into Tables
---Need to troubleshoot membership credentials, returning 0
+-- Insert Data into Tables
 INSERT INTO Customers(customerFirstName, customerLastName, customerEmail, customerPhone, customerAddress, customerCity, customerState, customerZipcode)
     VALUES('Greg', 'Abbot', 'gabb@gmail.com', '764-678-9873', '435 Looney Way', 'Houston', 'Texas', '39859'),
     ('Courtney', 'Smith', 'csmith@gmail.com', '869-431-5465', '4357 Charity Lane', 'Salem', 'Massachusets', '85404'),
