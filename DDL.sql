@@ -94,16 +94,18 @@ INSERT INTO Distributors(boxID, distributorName, distributorEmail, distributorPh
     ((SELECT boxID from Boxes WHERE boxType = 'Fruit'), 'Fruit-Surplus', 'crazyfruit@yahoo.com', '473-584-3623', '473 Cluck Road', 'Gainesville', 'Florida', '83430', (SELECT boxType FROM Boxes WHERE boxID = 4), 5.00),
     ((SELECT boxID from Boxes WHERE boxType = 'Nuts and Seeds'), 'Nut-and-Seed-Palace', 'buckwheat@hotmail.com', '483-584-3421', '892 Seedy Drive', 'Dayton', 'Georgia', '58493', (SELECT boxType FROM Boxes WHERE boxID = 5), 12.00);
 
-INSERT INTO Distributor_Products(distributorID, productID)
-    VALUES ((SELECT distributorID FROM Distributors WHERE distributorName = 'Farmer Jack'), (SELECT productID FROM Products WHERE productBoxType = 'Nuts and Seeds')),
-    ((SELECT distributorID FROM Distributors WHERE distributorName = 'Farmer Jack'), (SELECT productID FROM Products WHERE productBoxType = 'Fruit')),
-    ((SELECT distributorID FROM Distributors WHERE distributorName = 'Nut-and-Seed-Palace'), (SELECT productID FROM Products WHERE productBoxType = 'Lean Meats'));
+
 
 Insert INTO Products(boxID, productPrice, productQuantity, productBoxType)
     VALUES((SELECT boxID from Boxes WHERE boxType = 'Lean Meats'), 25.00, 5, (SELECT boxType from Boxes WHERE boxID = 1)),
     ((SELECT boxID from Boxes WHERE boxType = 'Nuts and Seeds'), 45.00, 8, (SELECT boxType from Boxes WHERE boxID = 5)),
     ((SELECT boxID from Boxes WHERE boxType = 'Fruit'), 50.00, 10, (SELECT boxType from Boxes WHERE boxID = 4));
 
+INSERT INTO Distributor_Products(distributorID, productID)
+    VALUES ((SELECT distributorID FROM Distributors WHERE distributorName = 'Farmer Jack'), (SELECT productID FROM Products WHERE productBoxType = 'Nuts and Seeds')),
+    ((SELECT distributorID FROM Distributors WHERE distributorName = 'Farmer Jack'), (SELECT productID FROM Products WHERE productBoxType = 'Fruit')),
+    ((SELECT distributorID FROM Distributors WHERE distributorName = 'Nut-and-Seed-Palace'), (SELECT productID FROM Products WHERE productBoxType = 'Lean Meats'));
+    
 Insert INTO Purchases(customerID, productID, purchaseDate, purchaseRevenue)
     VALUES((SELECT customerID FROM Customers WHERE customerFirstName ='Greg'), (SELECT productID FROM Products WHERE productBoxType = 'Nuts and Seeds'), '2023-02-07', 15.00),
     ((SELECT customerID FROM Customers WHERE customerFirstName ='Courtney'), (SELECT productID FROM Products WHERE productBoxType = 'Lean Meats'),'2022-12-23', 20.00),
