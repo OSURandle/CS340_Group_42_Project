@@ -1,0 +1,8 @@
+-Can be developed using any technology platform which serves content over the web.
+
+-Should use an SQL driven database back end (e.g. MySQL/MariaDB, PostgreSQL, MSSQL, etc.).
+
+-You should write all the queries and not depend on an ORM or similar mechanism to generate any queries.
+
+-You can host it anywhere as long as it is accessible to the graders.
+
