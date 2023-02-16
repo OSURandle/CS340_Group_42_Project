@@ -4,11 +4,11 @@
 
 -- Customer Table
 
-INSERT INTO Customers (customerFirstName,customerLastName,customerPhone,customerAddress,customerCity,customerState,customerZipcode)
+INSERT INTO Customers (customerFirstName, customerLastName, customerPhone, customerAddress, customerCity, customerState, customerZipcode)
 Values (:customerFirstName, :customerLastName, :customerEmail, :customerPhone, :customerAddress, :customerCity, :customerState, :customerZipcode)
 
 
-SELECT
+SELECT customerFirstName, customerLastName, customerPhone, customerAddress, customerCity, customerState, customerZipcode from Customers;
 
 
 -- Boxes Table
