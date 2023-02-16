@@ -4,7 +4,8 @@
 
 -- Customer Table
 
-INSERT
+INSERT Customers (customerFirstName,customerLastName,customerPhone,customerAddress,customerCity,customerState,customerZipcode)
+Values (:customerFirstName, :customerLastName, :customerEmail, :customerPhone, :customerAddress, :customerCity, :customerState, :customerZipcode)
 
 
 SELECT
