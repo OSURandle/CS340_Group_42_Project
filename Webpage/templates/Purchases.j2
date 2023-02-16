@@ -1,0 +1,92 @@
+<html>
+<head>
+<title>Products</title>
+<link href="style.css" rel="stylesheet" type="text/css" />
+<script language="JavaScript">
+		function showform(dowhat) {
+			/*
+			* four DIVS: browse, insert, delete
+			* this function sets one visible the others not
+			*/
+			if (dowhat == 'insert'){
+				document.getElementById('browse').style.display = 'none';
+				document.getElementById('insert').style.display = 'block';
+				document.getElementById('delete').style.display = 'none';
+			}
+      else if (dowhat == 'all'){
+				document.getElementById('browse').style.display = 'block';
+				document.getElementById('insert').style.display = 'block';
+				document.getElementById('delete').style.display = 'block';
+			}
+			else { //by default display browse
+				document.getElementById('browse').style.display = 'block';
+				document.getElementById('insert').style.display = 'none';
+				document.getElementById('delete').style.display = 'none';
+			}
+		}
+    function newPurchases() { showform('insert'); }
+    function browsePurchases() { showform ('browse'); }
+    function showAll() { showform ('all'); }
+</script>
+</head>
+
+<body onload="browsePurchases()">
+<h1>Purchases</h1>
+
+[ <a href="Distributors.j2">Distributors</a> | <a href="/">Customers</a> | <a href="Boxes.j2">Boxes</a> | <a href="Products.j2">Products</a> | <a href="Distributor_Products.j2">Distributor_Products</a> | <a href = "Purchases.j2">Purchases</a> ]
+<div id="browse">
+<p><a href="#" onClick="showAll()">Display all forms</a> </p>
+<table border="1" cellpadding="5">
+  <tr>
+    <th><a href="#" onClick="newPurchases()">New</a></th>
+    <th>productID</th>
+    <th>purchaseID</th>
+    <th>customerID</th>
+    <th>purchaseDate</th>
+    <th>purchaseRevenue</th>
+  </tr>
+  <tr>
+    <th> </th>
+    <td align="right">1</td>
+    <td align="right">2</td>
+    <td align="right">1</td>
+    <td>2023-02-07</td>
+    <td>10.00</td>
+  </tr>
+  <tr>
+    <th> </th>
+    <td align="right">2</td>
+    <td align="right">1</td>
+    <td align="right">2</td>
+    <td>2022-12-23</td>
+    <td>20.00</td>
+  </tr>
+  <tr>
+    <th> </th>
+    <td align="right">3</td>
+    <td align="right">3</td>
+    <td align="right">3</td>
+    <td>2023-01-14</td>
+    <td>30.00</td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+</div> <!-- browse -->
+<div id="insert">
+    <form method="POST" id="addPurchases">
+        <legend><strong>Add Purchases</strong></legend>
+          <fieldset class="fields">
+            <label> customerID </label> <input type="text" name="customerID">
+            <label> productID </label> <input type = "text" name = "productID">
+            <label> purchaseDate </label> <input type = "text" name = "purchaseDate">
+            <label> Revenue </label> <input type = "text" name = "Revenue">
+            <label> City </label> <input type = "text" name = "purchasesCity">
+            <label> State </label> <input type = "text" name = "purchasesZipCode">
+      </fieldset>
+          <input class="btn" type="submit" id="addPurchases" value="Add Purchases">
+          <input class="btn" type="button" value="cancel" onClick="browsePurchasess()">
+	</form> 
+
+
+</body>
+</html>

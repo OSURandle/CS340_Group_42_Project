@@ -1,0 +1,91 @@
+<html>
+<head>
+<title>Boxes</title>
+<link href="style.css" rel="stylesheet" type="text/css" />
+<script language="JavaScript">
+		function showform(dowhat) {
+			/*
+			* three DIVS: browse, insert
+			* this function sets one visible the others not
+			*/
+			if (dowhat == 'insert'){
+				document.getElementById('browse').style.display = 'none';
+				document.getElementById('insert').style.display = 'block';
+			}
+      else if (dowhat == 'all'){
+				document.getElementById('browse').style.display = 'block';
+				document.getElementById('insert').style.display = 'block';
+
+			}
+			else { //by default display browse
+				document.getElementById('browse').style.display = 'block';
+				document.getElementById('insert').style.display = 'none';
+			}
+		}
+    function newDistributor() { showform('insert'); }
+    function browseDistributer_Productss() { showform ('browse'); }
+    function showAll() { showform ('all'); }
+</script>
+</head>
+
+<body onload="browseDistributer_Productss()">
+<h1>Distributer_Productss</h1>
+
+[ <a href="Distributors.j2">Distributors</a> | <a href="/">Customers</a> | <a href="Boxes.j2">Boxes</a> | <a href="Products.j2">Products</a> | <a href="Distributor_Products.j2">Distributor_Products</a> | <a href = "Purchases.j2">Purchases</a> ]
+
+<div id="browse">
+<p><a href="#" onClick="showAll()">Display all forms</a> </p>
+<table border="1" cellpadding="5">
+  <tr>
+    <th><a href="#" onClick="newDistributer_Products()">New</a></th>
+    <th>boxID</th>
+    <th>boxType</th>
+    <th>boxPrice</th>
+  </tr>
+  <tr>
+    <td> </td>
+    <td align="right">1</td>
+    <td>Lean Meats</td>
+    <td>30.00</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td align="right">2</td>
+    <td>Seafood</td>
+    <td>40.00</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td align="right">3</td>
+    <td>Veggie</td>
+    <td>25.00</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td align="right">4</td>
+    <td>Fruit</td>
+    <td>25.00</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td align="right">5</td>
+    <td>Lean Meats</td>
+    <td>20.00</td>
+</table>
+<p>&nbsp;</p>
+</div> <!-- browse -->
+<div id="insert">
+    <form method="POST" id="addDistributor_Products">
+        <legend><strong>Add Distributor</strong></legend>
+          <fieldset class="fields">
+            <label> box type </label> <input type="text" name="boxType">
+            <label> box price </label> <input type="text" name="boxPrice">
+      </fieldset>
+          <input class="btn" type="submit" id="addDistributor" value="Add Distributor">
+          <input class="btn" type="button" value="cancel" onClick="browseDistributors()">
+	</form> 
+</div><!-- insert -->
+
+
+</body>
+</html>
