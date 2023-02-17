@@ -19,6 +19,8 @@ VALUES (:boxType, :boxPrice)
 
 SELECT boxType, boxPrice from Boxes;
 
+-- Drop-down
+SELECT boxID, BoxType FROM Boxes
 
 UPDATE Boxes SET boxType = :boxTypeInput, boxPrice= :boxPriceInput, WHERE 
 id= :box_ID_from_the_update_form
@@ -42,7 +44,6 @@ VALUES (:productPrice, :productQuantity, :productBoxType)
 SELECT productPrice, productQuantity, productBoxType FROM Products;
 
 
--- Drop-down
 
 
 -- Distributor_Products Table
