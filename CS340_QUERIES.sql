@@ -13,19 +13,21 @@ SELECT customerFirstName, customerLastName, customerPhone, customerAddress, cust
 
 -- Boxes Table
 
-INSERT
+INSERT INTO Boxes (boxType, boxPrice)
+VALUES (:boxType, :boxPrice)
 
 
-SELECT
+SELECT boxType, boxPrice from Boxes;
 
 
-UPDATE
+UPDATE Boxes
+
 
 
 
 -- Distributors Table
 
-INSERT
+INSERT INTO
 
 
 SELECT
@@ -36,7 +38,7 @@ DELETE
 
 -- Products Table
 
-INSERT
+INSERT INTO
 
 
 SELECT
@@ -47,12 +49,12 @@ SELECT
 
 -- Distributor_Products Table
 
-INSERT
+INSERT INTO
 
 SELECT
 
 -- Purchases Table
 
-INSERT
+INSERT INTO
 
 SELECT
