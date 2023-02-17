@@ -20,7 +20,8 @@ VALUES (:boxType, :boxPrice)
 SELECT boxType, boxPrice from Boxes;
 
 
-UPDATE Boxes
+UPDATE Boxes SET boxType = :boxTypeInput, boxPrice= :boxPriceInput, WHERE 
+id= :box_ID_from_the_update_form
 
 
 -- Distributors Table
@@ -30,7 +31,7 @@ VALUES (:distributorName, :distributorEmail, :distributorPhone, :distributorAddr
 
 SELECT distributorName, distributorEmail, distributorPhone, distributorAddress, distributorCity, distributorState, distributorZipcode, distributorProduct, distributorPrice FROM Disributors;
 
-DELETE
+DELETE FROM Distributors WHERE id = :distributorID_selected_from_browse_distributor_page
 
 
 -- Products Table
