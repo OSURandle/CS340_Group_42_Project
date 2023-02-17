@@ -48,7 +48,8 @@ SELECT productPrice, productQuantity, productBoxType FROM Products;
 
 -- Distributor_Products Table
 
-INSERT INTO
+INSERT INTO Distributor_Products(distributorID, productID)
+VALUES (:distributorID, :productID)
 
 SELECT dandpID, distributorID, productID FROM Distributor_Products;
 
