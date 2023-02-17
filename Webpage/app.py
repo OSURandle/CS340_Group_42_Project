@@ -33,6 +33,6 @@ def purchases():
 # Listener
 
 if __name__ == "__main__":
-    port = int(os.environ.get('PORT', 9112)) 
+    port = int(os.environ.get('PORT', 1989)) 
  
     app.run(port=port) 

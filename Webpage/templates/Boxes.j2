@@ -22,14 +22,14 @@
 				document.getElementById('insert').style.display = 'none';
 			}
 		}
-    function newDistributor() { showform('insert'); }
-    function browseDistributer_Productss() { showform ('browse'); }
+    function newBox() { showform('insert'); }
+    function browseBoxes() { showform ('browse'); }
     function showAll() { showform ('all'); }
 </script>
 </head>
 
-<body onload="browseDistributer_Productss()">
-<h1>Distributer_Productss</h1>
+<body onload="browseBoxes()">
+<h1>Boxes</h1>
 
 [ <a href="Distributors.j2">Distributors</a> | <a href="/">Customers</a> | <a href="Boxes.j2">Boxes</a> | <a href="Products.j2">Products</a> | <a href="Distributor_Products.j2">Distributor_Products</a> | <a href = "Purchases.j2">Purchases</a> ]
 
@@ -37,7 +37,7 @@
 <p><a href="#" onClick="showAll()">Display all forms</a> </p>
 <table border="1" cellpadding="5">
   <tr>
-    <th><a href="#" onClick="newDistributer_Products()">New</a></th>
+    <th><a href="#" onClick="newBoxes()">New</a></th>
     <th>boxID</th>
     <th>boxType</th>
     <th>boxPrice</th>
@@ -75,8 +75,8 @@
 <p>&nbsp;</p>
 </div> <!-- browse -->
 <div id="insert">
-    <form method="POST" id="addDistributor_Products">
-        <legend><strong>Add Distributor</strong></legend>
+    <form method="POST" id="addBoxes">
+        <legend><strong>Add Box</strong></legend>
           <fieldset class="fields">
             <label> box type </label> <input type="text" name="boxType">
             <label> box price </label> <input type="text" name="boxPrice">
