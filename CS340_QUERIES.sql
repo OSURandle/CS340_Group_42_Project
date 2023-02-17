@@ -5,10 +5,10 @@
 -- Customer Table
 
 INSERT INTO Customers (customerFirstName, customerLastName, customerPhone, customerAddress, customerCity, customerState, customerZipcode)
-Values (:customerFirstName, :customerLastName, :customerEmail, :customerPhone, :customerAddress, :customerCity, :customerState, :customerZipcode)
+VALUES (:customerFirstName, :customerLastName, :customerEmail, :customerPhone, :customerAddress, :customerCity, :customerState, :customerZipcode)
 
 
-SELECT customerFirstName, customerLastName, customerPhone, customerAddress, customerCity, customerState, customerZipcode from Customers;
+SELECT customerFirstName, customerLastName, customerPhone, customerAddress, customerCity, customerState, customerZipcode FROM Customers;
 
 
 -- Boxes Table
@@ -23,25 +23,22 @@ SELECT boxType, boxPrice from Boxes;
 UPDATE Boxes
 
 
-
-
 -- Distributors Table
 
-INSERT INTO
+INSERT INTO Distributors(distributorName, distributorEmail, distributorPhone, distributorAddress, distributorCity, distributorState, distributorZipcode, distributorProduct, distributorPrice)
+VALUES (:distributorName, :distributorEmail, :distributorPhone, :distributorAddress, :distributorCity, :distributorState, :distributorZipcode, :distributorProduct, :distributorPrice)
 
-
-SELECT
-
+SELECT distributorName, distributorEmail, distributorPhone, distributorAddress, distributorCity, distributorState, distributorZipcode, distributorProduct, distributorPrice FROM Disributors;
 
 DELETE
 
 
 -- Products Table
 
-INSERT INTO
+INSERT INTO Products(productPrice, productQuantity, productBoxType)
+VALUES (:productPrice, :productQuantity, :productBoxType)
 
-
-SELECT
+SELECT productPrice, productQuantity, productBoxType FROM Products;
 
 
 -- Drop-down
@@ -51,10 +48,11 @@ SELECT
 
 INSERT INTO
 
-SELECT
+SELECT dandpID, distributorID, productID FROM Distributor_Products;
 
 -- Purchases Table
 
-INSERT INTO
+INSERT INTO Purchases(purchaseDate, purchaseRevenue)
+VALUES (:purchaseDate, :purchaseRevenue)
 
-SELECT
+SELECT purchaseDate, purchaseRevenue FROM Purchases;
