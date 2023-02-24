@@ -10,12 +10,12 @@ CREATE OR REPLACE TABLE Customers(
     customerID int(10) AUTO_INCREMENT unique NOT NULL,
     customerFirstName varchar(50) NOT NULL,
     customerLastName varchar(50) NOT NULL,
-    customerEmail varchar(100) NOT NULL,
-    customerPhone varchar(40) NOT NULL,
+    customerEmail varchar(100) NULL,
+    customerPhone varchar(40) NULL,
     customerAddress varchar(100) NOT NULL,
     customerCity varchar(50) NOT NULL,
     customerState varchar(50) NOT NULL,
-    customerZipcode varchar(10) NOT NULL,
+    customerZipcode varchar(10) NULL,
     PRIMARY KEY(customerID)
 );
 
@@ -30,12 +30,12 @@ CREATE OR REPLACE TABLE Distributors(
     distributorID int(10) AUTO_INCREMENT unique NOT NULL,
     boxID int(10) NOT NULL,
     distributorName varchar(50) NOT NULL,
-    distributorEmail varchar(100) NOT NULL,
-    distributorPhone varchar(40) NOT NULL,
+    distributorEmail varchar(100) NULL,
+    distributorPhone varchar(40) NULL,
     distributorAddress varchar(100) NOT NULL,
     distributorCity varchar(50) NOT NULL,
     distributorState varchar(50) NOT NULL,
-    distributorZipcode int(10) NOT NULL,
+    distributorZipcode int(10) NULL,
     distributorProduct varchar(50) NOT NULL,
     distributorPrice decimal(10,2) NOT NULL,
     PRIMARY KEY(distributorID),
@@ -43,19 +43,19 @@ CREATE OR REPLACE TABLE Distributors(
 );
 
 CREATE OR REPLACE TABLE Products(
-    productID int(10) AUTO_INCREMENT unique NOT NULL,
+    productID int(10) AUTO_INCREMENT unique NULL,
     boxID int(10) NOT NULL,
-    productPrice decimal(10,2) NOT NULL,
-    productQuantity int(2) NOT NULL,
-    productBoxType varchar(50) NOT NULL,
+    productPrice decimal(10,2) NULL,
+    productQuantity int(2) NULL,
+    productBoxType varchar(50) NULL,
     PRIMARY KEY(productID),
     FOREIGN KEY (boxID) REFERENCES Boxes(boxID)
 );
 
 CREATE OR REPLACE TABLE Distributor_Products(
     dandpID int NOT NULL unique AUTO_INCREMENT,
-    distributorID INT(10) NOT NULL,
-    productID INT(10) NOT NULL,
+    distributorID INT(10) NULL,
+    productID INT(10) NULL,
     PRIMARY KEY(dandpID),
     FOREIGN KEY(distributorID) REFERENCES Distributors(distributorID)
     ON DELETE CASCADE,
