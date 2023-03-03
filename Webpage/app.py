@@ -82,7 +82,7 @@ def delete_distributor(distributor_id):
 
     cur.close()
 
-    return redirect('/distributor')
+    return redirect('/distributors')
     
 @app.route('/update_distributors/<string:distributors_id>', methods=['POST', 'GET'])
 def update_distributors(distributor_id):
