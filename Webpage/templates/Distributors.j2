@@ -11,25 +11,36 @@
 			if (dowhat == 'insert'){
 				document.getElementById('browse').style.display = 'none';
 				document.getElementById('insert').style.display = 'block';
+				document.getElementById('update').style.display = 'none';
+				document.getElementById('delete').style.display = 'none';
+			}
+			else if (dowhat == 'update'){
+				document.getElementById('browse').style.display = 'none';
+				document.getElementById('insert').style.display = 'none';
+				document.getElementById('update').style.display = 'block';
 				document.getElementById('delete').style.display = 'none';
 			}
 			else if (dowhat == 'delete'){
 				document.getElementById('browse').style.display = 'none';
 				document.getElementById('insert').style.display = 'none';
+				document.getElementById('update').style.display = 'none';
 				document.getElementById('delete').style.display = 'block';
 			}
       else if (dowhat == 'all'){
 				document.getElementById('browse').style.display = 'block';
 				document.getElementById('insert').style.display = 'block';
+				document.getElementById('update').style.display = 'block';
 				document.getElementById('delete').style.display = 'block';
 			}
 			else { //by default display browse
 				document.getElementById('browse').style.display = 'block';
 				document.getElementById('insert').style.display = 'none';
+				document.getElementById('update').style.display = 'none';
 				document.getElementById('delete').style.display = 'none';
 			}
 		}
     function newDistributor() { showform('insert'); }
+    function updateDistributor(pid) { showform ('update'); }
     function deleteDistributor(pid) { showform ('delete'); }
     function browseDistributors() { showform ('browse'); }
     function showAll() { showform ('all'); }
@@ -135,7 +146,27 @@
           <input class="btn" type="button" value="cancel" onClick="browsePeople()">
   </form> 
 </div><!-- delete -->
-
+<p>&nbsp;</p>
+<div id="update">
+    <form method="POST" id="UpdateDistributor">
+        <legend><strong>Update Distributor</strong></legend>
+          <fieldset class="fields">
+          <input type="hidden" name="distributorID" id="updatedistributorID" value="1">
+          <label> ID: </label> 1
+            <label> Name </label> <input type="text" name="distributorName">
+            <label> Email </label> <input type="text" name="distributorEmail">
+            <label> Phone </label> <input type = "text" name = "distributorPhone">
+            <label> Address </label> <input type = "text" name = "distributorAddress">
+            <label> City </label> <input type = "text" name = "distributorCity">
+            <label> State </label> <input type = "text" name = "distributorState">
+            <label> Zipcode </lable> <input type = "text" name = "distributorZipcode">
+            <label> Product </lable> <input type = "text" name = "distributorProduct">
+            <label> Price </lable> <input type = "text" name = "distributorPrice">
+      </fieldset>
+          <input class="btn" type="submit" id="UpdateDistributor" value="Update Distributor">
+          <input class="btn" type="button" value="cancel" onClick="browseDistributor()">
+	</form> 
+</div><!-- update -->
 
 </body>
 </html>
