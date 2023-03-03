@@ -36,84 +36,110 @@ def boxes():
 @app.route("/Distributors.j2", methods=["POST","GET"])
 def distributor():
     if request.method == 'POST':
-        input_distributor_id = request.form['input-distributor-id']
-        input_distributor_name = request.form['input-distributor-name']
+        distributor_name = request.form['distributorName']
+        distributor_email = request.form['distributorEmail']
+        distributor_phone = request.form['distributorPhone']
+        distributor_address = request.form['distributorAddress']
+        distributor_city = request.form['distributorCity']
+        distributor_state = request.form['distributorState']
+        distributor_zipcode = request.form['distributorZipcode']
+        distributor_product = request.form['distributorProduct']
+        distributor_price = request.form['distributorPrice']
 
-        query = """
-                INSERT INTO distributors (distributor_id, name)
-                VALUES ('%s', '%s')""" % (input_distributor_id, input_distributor_name)
-
+        query = f"""
+                INSERT INTO Distributors (boxID, distributorName, distributorEmail, distributorPhone, distributorAddress, distributorCity, distributorState, distributorZipcode, distributorProduct, distributorPrice)
+                VALUES (1, '{distributor_name}', '{distributor_email}', '{distributor_phone}', '{distributor_address}', '{distributor_city}', '{distributor_state}', '{distributor_zipcode}', '{distributor_product}', '{distributor_price}')
+                """
         cur = mysql.connection.cursor()
         cur.execute(query)
         mysql.connection.commit()
-
         cur.close()
 
-        return redirect('/distributors')
+        return redirect('/Distributors.j2')
     
     if request.method == 'GET':
-
-        search_query = request.args
+        search_query = request.args.get('search')
 
         if search_query:
-            search_query = search_query['search']
-            query = """SELECT distributor_id,
-                                name
-                        FROM distributors
-                        WHERE UPPER(distributor_id) LIKE UPPER(CONCAT('%%', '%s',
-                            '%%'))
-                           OR UPPER(name) LIKE UPPER(CONCAT('%%', '%s', '%%'))
-                    """ % (search_query, search_query)
+            query = f"""
+                    SELECT distributorID,
+                            distributorName,
+                            distributorEmail,
+                            distributorPhone,
+                            distributorAddress,
+                            distributorCity,
+                            distributorState,
+                            distributorZipcode,
+                            distributorProduct,
+                            distributorPrice
+                    FROM Distributors
+                    WHERE UPPER(distributorName) LIKE UPPER('%{search_query}%')
+                    """
         else:
-            query = "SELECT distributor_id, name FROM distributors ORDER BY distributor_id"
+            query = """
+                    SELECT distributorID,
+                            distributorName,
+                            distributorEmail,
+                            distributorPhone,
+                            distributorAddress,
+                            distributorCity,
+                            distributorState,
+                            distributorZipcode,
+                            distributorProduct,
+                            distributorPrice
+                    FROM Distributors
+                    ORDER BY distributorID
+                    """
 
         cur = mysql.connection.cursor()
         cur.execute(query)
         db_distributors = cur.fetchall()
-        
+        cur.close()
+
         return render_template("Distributors.j2", distributors=db_distributors)
     
 @app.route('/delete_distributors/<string:distributor_id>')
 def delete_distributor(distributor_id):
-    query = "DELETE FROM distributors WHERE distributor_id = '%s'" % (distributor_id)
+    query = f"DELETE FROM Distributors WHERE distributorID = '{distributor_id}'"
     cur = mysql.connection.cursor()
     cur.execute(query)
     mysql.connection.commit()
-
     cur.close()
 
-    return redirect('/distributors')
+    return redirect('/Distributors.j2')
     
-@app.route('/update_distributors/<string:distributors_id>', methods=['POST', 'GET'])
+@app.route('/update_distributors/<int:distributor_id>', methods=['POST', 'GET'])
 def update_distributors(distributor_id):
-
     if request.method == 'GET':
-        query = """
-                SELECT distributor_id,
-                        name
-                FROM distributors WHERE distributor_id = '%s'
-                """ % (distributor_id)
         cur = mysql.connection.cursor()
-        cur.execute(query)
-        db_distributors = cur.fetchone()
+        cur.execute('SELECT * FROM Distributors WHERE distributorID = %s', [distributor_id])
+        distributor = cur.fetchone()
         cur.close()
+        return render_template('update_distributors.j2', distributor=distributor)
 
-        return render_template(
-            "forms/update_distributors.j2",
-            distributors=db_distributors)
-
-    if request.method == 'POST':
-        input_distributor_name = request.form['distributor-name']
-
-        query = """
-                UPDATE distributors
-                SET name = '%s'
-                WHERE distributor_id = '%s'""" % (input_distributor_name, distributor_id)
+    elif request.method == 'POST':
+        name = request.form['distributorName']
+        email = request.form['distributorEmail']
+        phone = request.form['distributorPhone']
+        address = request.form['distributorAddress']
+        city = request.form['distributorCity']
+        state = request.form['distributorState']
+        zipcode = request.form['distributorZipcode']
+        product = request.form['distributorProduct']
+        price = request.form['distributorPrice']
 
         cur = mysql.connection.cursor()
-        cur.execute(query)
+        cur.execute(
+            """
+            UPDATE Distributors
+            SET distributorName = %s, distributorEmail = %s, distributorPhone = %s,
+                distributorAddress = %s, distributorCity = %s, distributorState = %s,
+                distributorZipcode = %s, distributorProduct = %s, distributorPrice = %s
+            WHERE distributorID = %s
+            """,
+            (name, email, phone, address, city, state, zipcode, product, price, distributor_id)
+        )
         mysql.connection.commit()
-
         cur.close()
 
         return redirect('/distributors')
