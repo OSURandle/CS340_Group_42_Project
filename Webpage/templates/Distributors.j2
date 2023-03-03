@@ -1,204 +1,135 @@
-<html>
-<head>
-<title>Distributors</title>
-<link href="style.css" rel="stylesheet" type="text/css" />
-<script language="JavaScript">
-		function showform(dowhat) {
-			/*
-			* four DIVS: browse, insert, delete
-			* this function sets one visible the others not
-			*/
-			if (dowhat == 'insert'){
-				document.getElementById('browse').style.display = 'none';
-				document.getElementById('insert').style.display = 'block';
-				document.getElementById('update').style.display = 'none';
-				document.getElementById('delete').style.display = 'none';
-			}
-			else if (dowhat == 'update'){
-				document.getElementById('browse').style.display = 'none';
-				document.getElementById('insert').style.display = 'none';
-				document.getElementById('update').style.display = 'block';
-				document.getElementById('delete').style.display = 'none';
-			}
-			else if (dowhat == 'delete'){
-				document.getElementById('browse').style.display = 'none';
-				document.getElementById('insert').style.display = 'none';
-				document.getElementById('update').style.display = 'none';
-				document.getElementById('delete').style.display = 'block';
-			}
-      else if (dowhat == 'all'){
-				document.getElementById('browse').style.display = 'block';
-				document.getElementById('insert').style.display = 'block';
-				document.getElementById('update').style.display = 'block';
-				document.getElementById('delete').style.display = 'block';
-			}
-			else { //by default display browse
-				document.getElementById('browse').style.display = 'block';
-				document.getElementById('insert').style.display = 'none';
-				document.getElementById('update').style.display = 'none';
-				document.getElementById('delete').style.display = 'none';
-			}
-		}
-    function newDistributor() { showform('insert'); }
-    function updateDistributor(pid) { showform ('update'); }
-    function deleteDistributor(pid) { showform ('delete'); }
-    function browseDistributors() { showform ('browse'); }
-    function showAll() { showform ('all'); }
-</script>
-</head>
+from flask import Flask, render_template, json, redirect
+from flask_mysqldb import MySQL
+from flask import request
+import os
+# Configuration
 
-<body onload="browseDistributors()">
-<h1>Distributors</h1>
+app = Flask(__name__)
 
-[ <a href="Distributors.j2">Distributors</a> | <a href="/">Customers</a> | <a href="Boxes.j2">Boxes</a> | <a href="Products.j2">Products</a> | <a href="Distributor_Products.j2">Distributor_Products</a> | <a href = "Purchases.j2">Purchases</a> ]
+# database connection
+# Template:
+# app.config["MYSQL_HOST"] = "classmysql.engr.oregonstate.edu"
+# app.config["MYSQL_USER"] = "cs340_OSUusername"
+# app.config["MYSQL_PASSWORD"] = "XXXX" | last 4 digits of OSU id
+# app.config["MYSQL_DB"] = "cs340_OSUusername"
+# app.config["MYSQL_CURSORCLASS"] = "DictCursor"
 
-<div id="browse">
-<p><a href="#" onClick="showAll()">Display all forms</a> (click here to show all the forms for creating, updating or deleting data) </p>
-<table border="1" cellpadding="5">
-  <tr>
-    <th><a href="#" onClick="newDistributor()">New</a></th>
-    <th>distributorID</th>
-    <th>boxID</th>
-    <th>Name</th>
-    <th>Email</th>
-    <th>Phone</th>
-    <th>Address</th>
-    <th>City</th>
-    <th>State</th>
-    <th>Zipcode</th>
-    <th>Product</th>
-    <th>Price</th>
-  </tr>
-  <tr>
-    <td><a href="#" onclick="deleteDistributor('this.distributorID')">Delete</a></td>
-    <td align="right">1</td>
-    <td align="right">4</td>
-    <td>Farmer Jack</td>
-    <td>leaner@gmail.com</td>
-    <td>498-768-4823</td>
-    <td>4345 Shoulder Lane</td>
-    <td>Vicksburg</td>
-    <td>Mississippi</td>
-    <td>39768</td>
-    <td>Lean Meats</td>
-    <td>10.00</td>
-  </tr>
-  <tr>
-    <td><a href="#" onclick="deleteDistributor('this.distributorID')">Delete</a></td>
-    <td align="right">1</td>
-    <td align="right">4</td>
-    <td>Fruit-Surplus</td>
-    <td>crazyfruit@gmail.com</td>
-    <td>473-584-3623</td>
-    <td>473 Cluck Road</td>
-    <td>Gainesville</td>
-    <td>Florida</td>
-    <td>83430</td>
-    <td>Fruit</td>
-    <td>5.00</td>
-  </tr>
-  <tr>
-    <td><a href="#" onclick="deleteDistributor('this.distributorID')">Delete</a></td>
-    <td align="right">3</td>
-    <td align="right">5</td>
-    <td>Nut-and-Seed-Palace</td>
-    <td>buckwheat@gmail.com</td>
-    <td>483-584-3421</td>
-    <td>892 Seedy Drive</td>
-    <td>Dayton</td>
-    <td>Georgia</td>
-    <td>58493</td>
-    <td>Nuts and Seeds</td>
-    <td>12.00</td>
-  </tr>
-</table>
-<p>&nbsp;</p>
-</div> <!-- browse -->
-<div id="insert">
-    <form method="POST" id="addDistributor">
-        <legend><strong>Add Distributor</strong></legend>
-          <fieldset class="fields">
-            <label> Name </label> <input type="text" name="distributorName">
-            <label> Email </label> <input type="text" name="distributorEmail">
-            <label> Phone </label> <input type = "text" name = "distributorPhone">
-            <label> Address </label> <input type = "text" name = "distributorAddress">
-            <label> City </label> <input type = "text" name = "distributorCity">
-            <label> State </label> <input type = "text" name = "distributorState">
-            <label> Zipcode </lable> <input type = "text" name = "distributorZipcode">
-            <label> Product </lable> <input type = "text" name = "distributorProduct">
-            <label> Price </lable> <input type = "text" name = "distributorPrice">
-      </fieldset>
-          <input class="btn" type="submit" id="addDistributor" value="Add Distributor">
-          <input class="btn" type="button" value="cancel" onClick="browseDistributors()">
-	</form> 
-</div><!-- insert -->
-<p>&nbsp;</p>
-<div id="delete" style="display: block">
-  <form method="POST" id="deleteDistributor">
-      <legend><strong>Delete Distributor</strong></legend>
-          <fieldset class="fields">
-          <p>Are you sure you wish to delete the following?</p>
-          <input type="hidden" name="distributorID" id="deletedistributorID" value="{{ distributor.distributorID }}">
-          <table border="1" cellpadding="5">
-            <tr>
-              <th>distributorID</th>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Phone</th>
-              <th>Address</th>
-              <th>City</th>
-              <th>State</th>
-              <th>Zipcode</th>
-              <th>Product</th>
-              <th>Price</th>
-            </tr>
-            <tr>
-              <td>{{ distributor.distributorID }}</td>
-              <td>{{ distributor.distributorName }}</td>
-              <td>{{ distributor.distributorEmail }}</td>
-              <td>{{ distributor.distributorPhone }}</td>
-              <td>{{ distributor.distributorAddress }}</td>
-              <td>{{ distributor.distributorCity }}</td>
-              <td>{{ distributor.distributorState }}</td>
-              <td>{{ distributor.distributorZipcode }}</td>
-              <td>{{ distributor.distributorProduct }}</td>
-              <td>{{ distributor.distributorPrice }}</td>
-            </tr>
-          </table>
-    </fieldset>
-    <input class="btn" type="submit" id="DeleteDistributor" value="Delete Distributor">
-          <input class="btn" type="button" value="cancel" onClick="browsePeople()">
-  </form> 
-</div><!-- delete -->
-<p>&nbsp;</p>
-<div id="update">
-  <form method="POST" id="update-distributor-form">
-    <legend><strong>Update Distributor</strong></legend>
-    <fieldset class="fields">
-      <input type="hidden" name="distributorID" value="{{ distributor.distributorID }}">
-      <label for="distributorName">Name:</label>
-      <input type="text" name="distributorName" value="{{ distributor.distributorName }}">
-      <label for="distributorEmail">Email:</label>
-      <input type="text" name="distributorEmail" value="{{ distributor.distributorEmail }}">
-      <label for="distributorPhone">Phone:</label>
-      <input type="text" name="distributorPhone" value="{{ distributor.distributorPhone }}">
-      <label for="distributorAddress">Address:</label>
-      <input type="text" name="distributorAddress" value="{{ distributor.distributorAddress }}">
-      <label for="distributorCity">City:</label>
-      <input type="text" name="distributorCity" value="{{ distributor.distributorCity }}">
-      <label for="distributorState">State:</label>
-      <input type="text" name="distributorState" value="{{ distributor.distributorState }}">
-      <label for="distributorZipcode">Zipcode:</label>
-      <input type="text" name="distributorZipcode" value="{{ distributor.distributorZipcode }}">
-      <label for="distributorProduct">Product:</label>
-      <input type="text" name="distributorProduct" value="{{ distributor.distributorProduct }}">
-      <label for="distributorPrice">Price:</label>
-      <input type="text" name="distributorPrice" value="{{ distributor.distributorPrice }}">
-    </fieldset>
-    <input type="submit" class="btn" value="Update Distributor">
-    <input type="button" class="btn" value="Cancel" onclick="browseDistributor()">
-  </form>
-</div><!-- update -->
+app.config['MYSQL_HOST'] = 'classmysql.engr.oregonstate.edu'
+app.config['MYSQL_USER'] = 'cs340_randlejo'
+app.config['MYSQL_PASSWORD'] = '5633' #last 4 of onid
+app.config['MYSQL_DB'] = 'cs340_randlejo' ###check this please****
+app.config['MYSQL_DB'] = 'cs340_randlejo' ###check this please****
+app.config['MYSQL_CURSORCLASS'] = "DictCursor"
 
-</body>
-</html>
+mysql = MySQL(app)
+
+# Routes 
+
+@app.route('/')
+def root():
+    return render_template("Index.j2")
+
+@app.route("/Boxes.j2")
+@app.route("/Boxes.j2", methods=["POST","GET"])
+def boxes():
+    return render_template("Boxes.j2")
+
+@app.route("/Distributors.j2")
+@app.route("/Distributors.j2", methods=["POST","GET"])
+def distributor():
+    return render_template("Distributors.j2")
+    if request.method == 'POST':
+        input_distributorID = request.form['input-distributor-id']
+        input_distributor_name = request.form['input-distributor-name']
+
+        query = """
+                INSERT INTO distributors (distributorID, name)
+                VALUES ('%s', '%s')""" % (input_distributorID, input_distributor_name)
+
+        cur = mysql.connection.cursor()
+        cur.execute(query)
+        mysql.connection.commit()
+
+        cur.close()
+
+        return redirect('/distributors')
+
+    if request.method == 'GET':
+
+        search_query = request.args
+
+        if search_query:
+            search_query = search_query['search']
+            query = """SELECT distributorID,
+                                name
+                        FROM distributors
+                        WHERE UPPER(distributorID) LIKE UPPER(CONCAT('%%', '%s',
+                            '%%'))
+                           OR UPPER(name) LIKE UPPER(CONCAT('%%', '%s', '%%'))
+                    """ % (search_query, search_query)
+        else:
+            query = "SELECT distributorID, name FROM distributors ORDER BY distributorID"
+
+        cur = mysql.connection.cursor()
+        cur.execute(query)
+        db_distributors = cur.fetchall()
+
+        return render_template("Distributors.j2", distributors=db_distributors)
+
+@app.route("/delete_distributors/<string:distributorID>")
+def delete_distributor(distributorID):
+    query = "DELETE FROM distributors WHERE distributorID = '%s';"
+    cur = mysql.connection.cursor()
+    cur.execute(query, (distributorID,))
+    mysql.connection.commit()
+
+    return redirect('/distributor')
+
+@app.route('/update_distributors/<string:distributorID>', methods=['POST', 'GET'])
+def update_distributors(distributorID):
+
+    if request.method == 'GET':
+        query = """
+                SELECT distributorID,
+                        name
+                FROM distributors WHERE distributorID = '%s'
+                """ % (distributorID)
+        cur = mysql.connection.cursor()
+        cur.execute(query)
+        db_distributors = cur.fetchone()
+        cur.close()
+
+        return render_template(
+            "forms/update_distributors.j2",
+            distributors=db_distributors)
+
+    if request.method == 'POST':
+        input_distributor_name = request.form['distributor-name']
+
+        query = """
+                UPDATE distributors
+                SET name = '%s'
+                WHERE distributorID = '%s'""" % (input_distributor_name, distributorID)
+
+        cur = mysql.connection.cursor()
+        cur.execute(query)
+        mysql.connection.commit()
+
+        cur.close()
+
+        return redirect('/distributors')
+
+@app.route("/Distributor_Products.j2")
+def dist_prod():
+    return render_template("Distributor_Products.j2")
+@app.route("/Products.j2")
+def products():
+    return render_template("Products.j2")
+@app.route("/Purchases.j2")
+def purchases():
+    return render_template("Purchases.j2")
+# Listener
+if __name__ == "__main__":
+    port = int(os.environ.get('PORT', 1989)) 
+ 
+    app.run(port=port, debug=True) 
