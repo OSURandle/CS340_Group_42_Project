@@ -1,9 +1,17 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, json, redirect
+from flask_mysqldb import MySQL
+from flask import request
 import os
 
 # Configuration
 
 app = Flask(__name__)
+
+app.config['MYSQL_HOST'] = 'classmysql.engr.oregonstate.edu'
+app.config['MYSQL_USER'] = 'cs340_randlejo'
+app.config['MYSQL_PASSWORD'] = '5633' #last 4 of onid
+app.config['MYSQL_DB'] = 'cs340_RandleJo' ###check this please****
+app.config['MYSQL_CURSORCLASS'] = "DictCursor"
 
 # Routes 
 
