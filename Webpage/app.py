@@ -142,7 +142,7 @@ def update_distributors(distributor_id):
         mysql.connection.commit()
         cur.close()
 
-        return redirect('/distributors')
+        return redirect('/Distributors.j2')
 
 @app.route("/Distributor_Products.j2")
 def dist_prod():
