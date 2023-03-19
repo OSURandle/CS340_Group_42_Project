@@ -1,0 +1,73 @@
+<!-- This file is adapted from the people example code-->
+<html>
+
+<head>
+	<title>Edit Customers</title>
+	<link href="style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+    <div>
+        <table border="1" cellpadding="5"> 
+            <caption> Editing Customer: </caption>
+            <!-- Access data tuple passed from app.py -->
+            {% if data %}
+                <thead>
+                    <tr>
+                        <!-- Iterate through each key in the first entry to get the column name -->
+                        {% for key in data[0].keys() %}
+
+                        <!-- Create a <th> tag with the key inside of it, this will be our header row -->
+                        <th scope="col" data-field="{{ key }}" data-filter-control="input">{{ key }}</th>
+                        
+                        <!-- End of this for loop -->
+                        {% endfor %} 
+                    </tr>
+
+                <tbody>
+                    <!-- Now, iterate through every item in data -->
+                    {% for item in data %}
+                    <tr>
+                        <!-- Then iterate through every key in the current item dictionary -->
+                        {% for key in item.keys() %}
+                        
+                        <td>{{item[key]}}</td> {% endfor %} 
+                    </tr> 
+                    {% endfor %} 
+            {% endif %} 
+        </table>
+
+        <div id="edit">
+            <!-- form to edit data in Customers-->
+            <form id="editCustomer" action="/edit_Customers/{{data[0].customerID}}" method="post">
+                <legend><strong>Edit Location</strong></legend>
+                <fieldset>
+                    <input type="hidden" value="{{data[0].customerID}}" class="form-control" id="customerID" name="customerID" required>
+                    
+                    <label for="name">customerName:</label>
+                    <input type="text" value="{{data[0].customerName}}" class="form-control" id="customerName" name="customerName" pattern="[A-Za-z0-9\(\)._\-\s]+{1,}" required>	
+    
+                    <label for="name">customerEmail:</label>
+                    <input type="text" value="{{data[0].customerEmail}}" class="form-control" id="customerEmail" name="customerEmail" pattern="[A-Za-z0-9\(\)._\-\s]+{1,}" required>
+
+                    <label for="name">customerPhone:</label>
+                    <input type="text" value="{{data[0].customerPhone}}" class="form-control" id="customerPhone" name="customerPhone" pattern="[A-Za-z0-9\(\)._\-\s]+{1,}" required>
+
+                    <label for="name">customerAddress:</label>
+                    <input type="text" value="{{data[0].customerAddress}}" class="form-control" id="customerAddress" name="customerAddress" pattern="[A-Za-z0-9\(\)._\-\s]+{1,}" required>
+
+                    <label for="name">customerCity:</label>
+                    <input type="text" value="{{data[0].customerCity}}" class="form-control" id="customerCity" name="customerCity" pattern="[A-Za-z0-9\(\)._\-\s]+{1,}" required>
+
+                    <label for="name">customerState:</label>
+                    <input type="text" value="{{data[0].customerState}}" class="form-control" id="customerState" name="customerState" pattern="[A-Za-z0-9\(\)._\-\s]+{1,}" required>
+
+                    <label for="name">customerZipcode:</label>
+                    <input type="text" value="{{data[0].customerZipcode}}" class="form-control" id="customerZipcode" name="customerZipcode" pattern="[A-Za-z0-9\(\)._\-\s]+{1,}" required>
+
+                    </fieldset>
+                <input type="submit" value="Edit Customer" name="Edit_Customer" class="btn btn-primary" style="margin:.5rem;">
+                <a href='/Customers'><input class="btn" type="button" value="cancel"></a>
+            </form>
+</body>
+</html>
