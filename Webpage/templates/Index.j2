@@ -1,149 +1,22 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<title>Customers</title>
-<link href="style.css" rel="stylesheet" type="text/css" />
-<script language="JavaScript">
-		function showform(dowhat) {
-			/*
-			* four DIVS: browse, insert, update, delete
-			* this function sets one visible the others not
-			*/
-			if (dowhat == 'insert'){
-				document.getElementById('browse').style.display = 'none';
-				document.getElementById('insert').style.display = 'block';
-				document.getElementById('update').style.display = 'none';
-				document.getElementById('delete').style.display = 'none';
-			}
-			else if (dowhat == 'update'){
-				document.getElementById('browse').style.display = 'none';
-				document.getElementById('insert').style.display = 'none';
-				document.getElementById('update').style.display = 'block';
-				document.getElementById('delete').style.display = 'none';
-			}
-			else if (dowhat == 'delete'){
-				document.getElementById('browse').style.display = 'none';
-				document.getElementById('insert').style.display = 'none';
-				document.getElementById('update').style.display = 'none';
-				document.getElementById('delete').style.display = 'block';
-			}
-      else if (dowhat == 'all'){
-				document.getElementById('browse').style.display = 'block';
-				document.getElementById('insert').style.display = 'block';
-				document.getElementById('update').style.display = 'block';
-				document.getElementById('delete').style.display = 'block';
-			}
-			else { //by default display browse
-				document.getElementById('browse').style.display = 'block';
-				document.getElementById('insert').style.display = 'none';
-				document.getElementById('update').style.display = 'none';
-				document.getElementById('delete').style.display = 'none';
-			}
-		}
-    function newCustomer() { showform('insert'); }
-    function updateCustomer(pid) { showform('update'); }
-    function deleteCustomer(pid) { showform ('delete'); }
-    function browseCustomers() { showform ('browse'); }
-    function showAll() { showform ('all'); }
-</script>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="static/css/style.css">
+<title>HomePage</title>
 </head>
-
-<body onload="browseCustomers()">
-<h1>Customers</h1>
-
-[ <a href="Distributors.j2">Distributors</a> | <a href="/">Customers</a> | <a href="Boxes.j2">Boxes</a> | <a href="Products.j2">Products</a> | <a href="Distributor_Products.j2">Distributor_Products</a> | <a href = "Purchases.j2">Purchases</a>]
-
-<div id="browse">
-<p><a href="#" onClick="showAll()">Display all forms</a> (click here to show all the forms for creating, updating or deleting data) </p>
-<table border="1" cellpadding="5">
-  <tr>
-    <th><a href="#" onClick="newCustomer()">New</a></th>
-    <th>customerID</th>
-    <th>FirstName</th>
-    <th>LastName</th>
-    <th>Email</th>
-    <th>Phone</th>
-    <th>Address</th>
-    <th>City</th>
-    <th>State</th>
-    <th>Zipcode</th>
-  </tr>
-  <tr>
-    <td><a href="#" onClick="updateCustomer('this.customerID')">Edit</a></td>
-    <td align="right">1</td>
-    <td>Greg</td>
-    <td align="right">Abbot</td>
-    <td>gabb@gmail.com</td>
-    <td>764-678-9873</td>
-    <td>435 Looney Way</td>
-    <td>Houston</td>
-    <td>Texas</td>
-    <td>39859</td>
-  </tr>
-  <tr>
-    <td><a href="#" onClick="updateCustomer('this.customerID')">Edit</a></td>
-    <td align="right">2</td>
-    <td>Courtney</td>
-    <td align="right">Smith</td>
-    <td>csmith@gmail.com</td>
-    <td>869-431-5465</td>
-    <td>4357 Charity Lane</td>
-    <td>Salem</td>
-    <td>Massachusets</td>
-    <td>85404</td>
-  </tr>
-  <tr>
-    <td><a href="#" onClick="updateCustomer('this.customerID')">Edit</a></td>
-    <td align="right">3</td>
-    <td>Felix</td>
-    <td align="right">Harding</td>
-    <td>fharding@gmail.com</td>
-    <td>687-345-0968</td>
-    <td>235 Wallaby Way</td>
-    <td>Panama City</td>
-    <td>Florida</td>
-    <td>38756</td>
-  </tr>
-</table>
-<p>&nbsp;</p>
-</div> <!-- browse -->
-<div id="insert">
-    <form method="POST" id="addCustomer">
-        <legend><strong>Add Customer</strong></legend>
-          <fieldset class="fields">
-            <label> first name </label> <input type="text" name="customerFirstName">
-            <label> last name </label> <input type="text" name="customerLastName">
-            <label> Email </label> <input type = "text" name = "customerEmail">
-            <label> Phone </label> <input type = "text" name = "customerPhone">
-            <label> Address </label> <input type = "text" name = "customerAddress">
-            <label> City </label> <input type = "text" name = "customerCity">
-            <label> State </label> <input type = "text" name = "customerState">
-	    <label> ZipCode </label> <input type = "text" name = "customerZipCode">
-      </fieldset>
-          <input class="btn" type="submit" id="addCustomer" value="Add Customer">
-          <input class="btn" type="button" value="cancel" onClick="browseCustomers()">
-	</form> 
-</div><!-- insert -->
-<p>&nbsp;</p>
-<div id="update">
-    <form method="POST" id="UpdateCustomer">
-        <legend><strong>Update Customer</strong></legend>
-          <fieldset class="fields">
-          <input type="hidden" name="customerID" id="updatecustomerID" value="1">
-          <label> ID: </label> 1
-            <label> first name </label> <input type="text" name="customerFirstName">
-            <label> last name </label> <input type="text" name="customerLastName">
-            <label> Email </label> <input type = "text" name = "customerEmail">
-            <label> Phone </label> <input type = "text" name = "customerPhone">
-            <label> Address </label> <input type = "text" name = "customerAddress">
-            <label> City </label> <input type = "text" name = "customerCity">
-            <label> State </label> <input type = "text" name = "customerState">
-	    <label> ZipCode </label> <input type = "text" name = "customerZipCode">
-      </fieldset>
-          <input class="btn" type="submit" id="UpdateSaveCustomer" value="Save Update Customer">
-          <input class="btn" type="button" value="cancel" onClick="browsePeople()">
-	</form> 
-</div><!-- update -->
-
-
+<body>
+    <h1>Paleo Provisions</h1>
+    <nav>
+        <a href="Index">Home</a>
+        <a href="Customers">Customers</a>
+        <a href="Boxes">Boxes</a>
+        <a href="Distributors">Distributors</a>
+        <a href ="Distributor_Boxes">Distributor Boxes</a>
+        <a href="Purchases">Purchases</a>
+    </nav>
+    <br>
 </body>
 </html>
