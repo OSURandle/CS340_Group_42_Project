@@ -1,3 +1,4 @@
+<!-- This file is adapted from the people example code-->
 <html>
 <head>
 <title>Boxes</title>
@@ -5,86 +6,94 @@
 <script language="JavaScript">
 		function showform(dowhat) {
 			/*
-			* three DIVS: browse, insert
+			* three DIVS: browse, insert, delete
 			* this function sets one visible the others not
 			*/
 			if (dowhat == 'insert'){
 				document.getElementById('browse').style.display = 'none';
 				document.getElementById('insert').style.display = 'block';
+				document.getElementById('edit').style.display = 'none';
+				document.getElementById('delete').style.display = 'none';
+			}
+			else if (dowhat == 'delete'){
+				document.getElementById('browse').style.display = 'none';
+				document.getElementById('insert').style.display = 'none';
+				document.getElementById('edit').style.display = 'none';
+				document.getElementById('delete').style.display = 'block';
 			}
       else if (dowhat == 'all'){
 				document.getElementById('browse').style.display = 'block';
 				document.getElementById('insert').style.display = 'block';
-
+				document.getElementById('edit').style.display = 'block';
+				document.getElementById('delete').style.display = 'block';
 			}
 			else { //by default display browse
 				document.getElementById('browse').style.display = 'block';
 				document.getElementById('insert').style.display = 'none';
+				document.getElementById('edit').style.display = 'none';
+				document.getElementById('delete').style.display = 'none';
 			}
 		}
     function newBox() { showform('insert'); }
+    function deleteBox(boxID) { showform ('delete'); }
     function browseBoxes() { showform ('browse'); }
     function showAll() { showform ('all'); }
-</script>
+    </script>
 </head>
 
 <body onload="browseBoxes()">
-<h1>Boxes</h1>
+    <h1>Boxes</h1>
 
-[ <a href="Distributors.j2">Distributors</a> | <a href="/">Customers</a> | <a href="Boxes.j2">Boxes</a> | <a href="Products.j2">Products</a> | <a href="Distributor_Products.j2">Distributor_Products</a> | <a href = "Purchases.j2">Purchases</a> ]
+    [ <a href="Index">Home</a> | <a href="Distributors">Distributors</a> | <a href="Customers">Customers</a> | <a href="Boxes">Boxes</a> | <a href="Distributor_Boxes">Distributor_Boxes</a> | <a href = "Purchases">Purchases</a>]
+    <div id="browse">
+	    <p><a href="#" onClick="newBox()">Add New</a> </p>
+	    <table border="1" cellpadding="5">
+            <!-- Access data tuple passed from app.py --> 
+            {% if data %}
+			    <thead>
+				    <tr>
+					    <!-- Iterate through each key in the first entry to get the column name -->
+                        {% for key in data[0].keys() %}
+					    
+                        <!-- Create a <th> tag with the key inside of it, this will be our header row -->
+					    <th scope="col" data-field="{{ key }}" data-filter-control="input">{{ key }}</th>
+					
+                        <!-- End of this for loop -->
+                        {% endfor %} 
+                    </tr>
 
-<div id="browse">
-<p><a href="#" onClick="showAll()">Display all forms</a> (click here to show all the forms for creating, updating or deleting data) </p>
-<table border="1" cellpadding="5">
-  <tr>
-    <th><a href="#" onClick="newBoxes()">New</a></th>
-    <th>boxID</th>
-    <th>boxType</th>
-    <th>boxPrice</th>
-  </tr>
-  <tr>
-    <td> </td>
-    <td align="right">1</td>
-    <td>Lean Meats</td>
-    <td>30.00</td>
-  </tr>
-  <tr>
-    <td> </td>
-    <td align="right">2</td>
-    <td>Seafood</td>
-    <td>40.00</td>
-  </tr>
-  <tr>
-    <td> </td>
-    <td align="right">3</td>
-    <td>Veggie</td>
-    <td>25.00</td>
-  </tr>
-  <tr>
-    <td> </td>
-    <td align="right">4</td>
-    <td>Fruit</td>
-    <td>25.00</td>
-  </tr>
-  <tr>
-    <td> </td>
-    <td align="right">5</td>
-    <td>Lean Meats</td>
-    <td>20.00</td>
-</table>
-<p>&nbsp;</p>
-</div> <!-- browse -->
-<div id="insert">
-    <form method="POST" id="addBoxes">
-        <legend><strong>Add Box</strong></legend>
-          <fieldset class="fields">
-            <label> box type </label> <input type="text" name="boxType">
-            <label> box price </label> <input type="text" name="boxPrice">
-      </fieldset>
-          <input class="btn" type="submit" id="addDistributor" value="Add Distributor">
-          <input class="btn" type="button" value="cancel" onClick="browseDistributors()">
-	</form> 
-</div><!-- insert -->
+			    <tbody>
+				    <!-- Now, iterate through every item in data -->{% for item in data %}
+					    <tr>
+						    <!-- Then iterate through every key in the current item dictionary -->
+                            {% for key in item.keys() %}
+
+						    <!-- Create a <td> element with the value of that key in it -->
+						    <td> {{item[key]}} </td> 
+                            {% endfor %}
+
+                            <!-- Create our delete button -->
+						    
+						    <td><a href="delete_box/{{item.boxID}}" class="btn btn-default">Delete</a></td>
+
+					    </tr> 
+                        {% endfor %} 
+                {% endif %} 
+            </table>   
+        <p>&nbsp;</p>
+        </div>	<!-- browse -->
+
+    <div id="insert">
+        <form id ="insertBoxes" action="/Boxes" method="post">
+            <legend><strong>Add Box</strong></legend>
+            <fieldset class="fields">
+                <label> boxType </label> <input type="text" name="boxType">
+                <label> boxPrice </label> <input type = "number" name = "boxPrice">
+            </fieldset>
+			<input type="submit" value="Add Box" name="Add_Box" class="btn btn-primary" style="margin:.5rem;">
+			<input class="btn" type="button" value="Cancel" onClick="browseBoxes()">
+	    </form> 
+    </div><!-- insert -->
 
 
 </body>
