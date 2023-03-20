@@ -1,3 +1,4 @@
+# This file is adapted from the people example code
 from flask import Flask, render_template, json, redirect
 from flask_mysqldb import MySQL
 from flask import request
@@ -18,146 +19,402 @@ app = Flask(__name__)
 app.config['MYSQL_HOST'] = 'classmysql.engr.oregonstate.edu'
 app.config['MYSQL_USER'] = 'cs340_randlejo'
 app.config['MYSQL_PASSWORD'] = '5633' #last 4 of onid
-app.config['MYSQL_DB'] = 'cs340_randlejo' ###check this please****
+app.config['MYSQL_DB'] = 'cs340_randlejo' 
 app.config['MYSQL_CURSORCLASS'] = "DictCursor"
 
 mysql = MySQL(app)
 
 # Routes 
 
-@app.route('/', methods=["POST","GET"])
-def root():
+@app.route("/")
+def index():
     return render_template("Index.j2")
 
-@app.route("/Boxes.j2", methods=["POST","GET"])
-def boxes():
-    return render_template("Boxes.j2")
+@app.route("/Index")
+def home():
+    return render_template("Index.j2")
 
-@app.route("/Distributors.j2", methods=["POST","GET"])
-def distributor():
-    if request.method == 'POST':
-        distributor_name = request.form['distributorName']
-        distributor_email = request.form['distributorEmail']
-        distributor_phone = request.form['distributorPhone']
-        distributor_address = request.form['distributorAddress']
-        distributor_city = request.form['distributorCity']
-        distributor_state = request.form['distributorState']
-        distributor_zipcode = request.form['distributorZipcode']
-        distributor_product = request.form['distributorProduct']
-        distributor_price = request.form['distributorPrice']
+# Customer Routes
 
-        query = f"""
-                INSERT INTO Distributors (boxID, distributorName, distributorEmail, distributorPhone, distributorAddress, distributorCity, distributorState, distributorZipcode, distributorProduct, distributorPrice)
-                VALUES (1, '{distributor_name}', '{distributor_email}', '{distributor_phone}', '{distributor_address}', '{distributor_city}', '{distributor_state}', '{distributor_zipcode}', '{distributor_product}', '{distributor_price}')
-                """
+@app.route("/Customers", methods=["POST", "GET"])
+def customers():
+
+    if request.method == "POST":
+        if request.form.get("Add_Customer"):
+            customerName = request.form["customerName"]
+            customerEmail = request.form["customerEmail"]
+            customerPhone = request.form["customerPhone"]
+            customerAddress = request.form["customerAddress"]
+            customerCity = request.form["customerCity"]
+            customerState = request.form["customerState"]
+            customerZipcode = request.form["customerZipcode"]
+            # Account for null Email, Phone, and Zipcode
+            if customerEmail == "" and customerPhone == "" and customerZipcode == "":
+                query = "INSERT INTO Customers(customerName, customerAddress, customerCity, customerState) VALUES (%s, %s, %s, %s)"
+                cur = mysql.connection.cursor()
+                cur.execute(query, (customerName, customerAddress, customerCity, customerState))
+                mysql.connection.commit()
+            # Account for null Email, Phone
+            elif customerEmail == "" and customerPhone == "":
+                query = "INSERT INTO Customers(customerName, customerAddress, customerCity, customerState, customerZipcode) VALUES (%s, %s, %s, %s, %s)"
+                cur = mysql.connection.cursor()
+                cur.execute(query, (customerName, customerAddress, customerCity, customerState, customerZipcode))
+                mysql.connection.commit()
+            # Account for null Email, Zipcode
+            elif customerEmail == "" and customerZipcode == "":
+                query = "INSERT INTO Customers(customerName, customerPhone, customerAddress, customerCity, customerState) VALUES (%s, %s, %s, %s, %s)"
+                cur = mysql.connection.cursor()
+                cur.execute(query, (customerName, customerPhone, customerAddress, customerCity, customerState))
+                mysql.connection.commit()
+            # Account for null Phone, Zipcode
+            elif customerPhone == "" and customerZipcode == "":
+                query = "INSERT INTO Customers(customerName, customerEmail, customerAddress, customerCity, customerState) VALUES (%s, %s, %s, %s, %s)"
+                cur = mysql.connection.cursor()
+                cur.execute(query, (customerName, customerEmail, customerAddress, customerCity, customerState))
+                mysql.connection.commit()
+            # Account for null Email
+            elif customerEmail == "":
+                query = "INSERT INTO Customers(customerName, customerPhone, customerAddress, customerCity, customerState, customerZipcode) VALUES (%s, %s, %s, %s, %s, %s)"
+                cur = mysql.connection.cursor()
+                cur.execute(query, (customerName, customerPhone, customerAddress, customerCity, customerState, customerZipcode))
+                mysql.connection.commit()
+            # Account for null Phone
+            elif customerPhone == "":
+                query = "INSERT INTO Customers(customerName, customerEmail, customerAddress, customerCity, customerState, customerZipcode) VALUES (%s, %s, %s, %s, %s, %s)"
+                cur = mysql.connection.cursor()
+                cur.execute(query, (customerName, customerEmail, customerAddress, customerCity, customerState, customerZipcode))
+                mysql.connection.commit()
+            # Account for null Zipcode
+            elif customerZipcode == "":
+                query = "INSERT INTO Customers(customerName, customerEmail, customerPhone, customerAddress, customerCity, customerState) VALUES (%s, %s, %s, %s, %s, %s)"
+                cur = mysql.connection.cursor()
+                cur.execute(query, (customerName, customerAddress, customerCity, customerState))
+                mysql.connection.commit()
+            # no null inputs
+            else:
+                query = "INSERT INTO Customers(customerName, customerEmail, customerPhone, customerAddress, customerCity, customerState, customerZipcode) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+                cur = mysql.connection.cursor()
+                cur.execute(query, (customerName, customerEmail, customerPhone, customerAddress, customerCity, customerState, customerZipcode))
+                mysql.connection.commit()
+            return redirect("/Customers")
+    # Populates Customers table
+    if request.method == "GET":
+        query = "SELECT customerID, customerName, customerEmail, customerPhone, customerAddress, customerCity, customerState, customerZipcode FROM Customers;"
         cur = mysql.connection.cursor()
         cur.execute(query)
-        mysql.connection.commit()
-        cur.close()
+        data = cur.fetchall()
+        return render_template("Customers.j2", data=data)
 
-        return redirect('/Distributors.j2')
-    
-    if request.method == 'GET':
-        search_query = request.args.get('search')
 
-        if search_query:
-            query = f"""
-                    SELECT distributorID,
-                            distributorName,
-                            distributorEmail,
-                            distributorPhone,
-                            distributorAddress,
-                            distributorCity,
-                            distributorState,
-                            distributorZipcode,
-                            distributorProduct,
-                            distributorPrice
-                    FROM Distributors
-                    WHERE UPPER(distributorName) LIKE UPPER('%{search_query}%')
-                    """
-        else:
-            query = """
-                    SELECT distributorID,
-                            distributorName,
-                            distributorEmail,
-                            distributorPhone,
-                            distributorAddress,
-                            distributorCity,
-                            distributorState,
-                            distributorZipcode,
-                            distributorProduct,
-                            distributorPrice
-                    FROM Distributors
-                    ORDER BY distributorID
-                    """
-
-        cur = mysql.connection.cursor()
-        cur.execute(query)
-        db_distributors = cur.fetchall()
-        cur.close()
-
-        return render_template("Distributors.j2", distributors=db_distributors)
-    
-@app.route('/delete_distributors/<string:distributor_id>')
-def delete_distributor(distributor_id):
-    query = f"DELETE FROM Distributors WHERE distributorID = '{distributor_id}'"
+@app.route("/delete_customer/<int:customerID>")
+def delete_customer(customerID):
+    # mySQL query to delete the customers with our passed id
+    query = "DELETE FROM Customers WHERE customerID = %s;"
     cur = mysql.connection.cursor()
-    cur.execute(query)
+    cur.execute(query, (customerID,))
     mysql.connection.commit()
-    cur.close()
 
-    return redirect('/Distributors.j2')
+    # redirect back to customers page
+    return redirect("/Customers")
+
+@app.route("/edit_Customers/<int:customerID>", methods=["POST", "GET"])
+def edit_Customers(customerID):
+    if request.method == "GET":
+        query = "SELECT * FROM Customers WHERE customerID = %s" % (customerID)
+        cur = mysql.connection.cursor()
+        cur.execute(query)
+        data = cur.fetchall()
+        return render_template("edit_Customers.j2", data=data)
     
-@app.route('/update_distributors/<int:distributor_id>', methods=['POST', 'GET'])
-def update_distributors(distributor_id):
-    if request.method == 'GET':
+    if request.method == "POST":
+        if request.form.get("Edit_Customer"):
+            
+            customerName = request.form["customerName"]
+            customerEmail = request.form["customerEmail"]
+            customerPhone = request.form["customerPhone"]
+            customerAddress = request.form["customerAddress"]
+            customerCity = request.form["customerCity"]
+            customerState = request.form["customerState"]
+            customerZipcode = request.form["customerZipcode"]
+            # Account for null Email, Phone, and Zipcode
+            if (customerEmail == "" or customerEmail == "None") and (customerPhone == "" or customerPhone == "None") and (customerZipcode == "" or customerZipcode == "None"):
+                query = "UPDATE Customers SET Customers.customerName = %s, Customers.customerEmail = NULL, Customers.customerPhone = NULL, Customers.customerAddress = %s, Customers.customerCity = %s, Customers.customerState = %s, Customers.customerZipcode = NULL WHERE Customers.customerID = %s"
+                cur = mysql.connection.cursor()
+                cur.execute(query, (customerName, customerEmail, customerPhone, customerAddress, customerCity, customerState, customerZipcode, customerID))
+                mysql.connection.commit()
+            # Account for null Email, Phone
+            elif (customerEmail == "" or customerEmail == "None") and (customerPhone == "" or customerPhone == "None"):
+                query = "UPDATE Customers SET Customers.customerName = %s, Customers.customerEmail = NULL, Customers.customerPhone = NULL, Customers.customerAddress = %s, Customers.customerCity = %s, Customers.customerState = %s, Customers.customerZipcode = %s WHERE Customers.customerID = %s"
+                cur = mysql.connection.cursor()
+                cur.execute(query, (customerName, customerEmail, customerPhone, customerAddress, customerCity, customerState, customerZipcode, customerID))
+                mysql.connection.commit()
+            # Account for null Email, Zipcode
+            elif (customerEmail == "" or customerEmail == "None") and (customerZipcode == "" or customerZipcode == "None"):
+                query = "UPDATE Customers SET Customers.customerName = %s, Customers.customerEmail = NULL, Customers.customerPhone = %s, Customers.customerAddress = %s, Customers.customerCity = %s, Customers.customerState = %s, Customers.customerZipcode = NULL WHERE Customers.customerID = %s"
+                cur = mysql.connection.cursor()
+                cur.execute(query, (customerName, customerEmail, customerPhone, customerAddress, customerCity, customerState, customerZipcode, customerID))
+                mysql.connection.commit()
+            # Account for null Phone, Zipcode
+            elif (customerPhone == "" or customerPhone == "None") and (customerZipcode == "" or customerZipcode == "None"):
+                query = "UPDATE Customers SET Customers.customerName = %s, Customers.customerEmail = %s, Customers.customerPhone = NULL, Customers.customerAddress = %s, Customers.customerCity = %s, Customers.customerState = %s, Customers.customerZipcode = NULL WHERE Customers.customerID = %s"
+                cur = mysql.connection.cursor()
+                cur.execute(query, (customerName, customerEmail, customerPhone, customerAddress, customerCity, customerState, customerZipcode, customerID))
+                mysql.connection.commit()
+            # Account for null Email
+            elif customerEmail == "" or customerEmail == "None":
+                query = "UPDATE Customers SET Customers.customerName = %s, Customers.customerEmail = NULL, Customers.customerPhone = %s, Customers.customerAddress = %s, Customers.customerCity = %s, Customers.customerState = %s, Customers.customerZipcode = %s WHERE Customers.customerID = %s"
+                cur = mysql.connection.cursor()
+                cur.execute(query, (customerName, customerEmail, customerPhone, customerAddress, customerCity, customerState, customerZipcode, customerID))
+                mysql.connection.commit()
+            # Account for null Phone
+            elif customerPhone == "" or customerPhone == "None":
+                query = "UPDATE Customers SET Customers.customerName = %s, Customers.customerEmail = %s, Customers.customerPhone = NULL, Customers.customerAddress = %s, Customers.customerCity = %s, Customers.customerState = %s, Customers.customerZipcode = %s WHERE Customers.customerID = %s"
+                cur = mysql.connection.cursor()
+                cur.execute(query, (customerName, customerEmail, customerPhone, customerAddress, customerCity, customerState, customerZipcode, customerID))
+                mysql.connection.commit()
+            # Account for null Zipcode
+            elif customerZipcode == "" or customerZipcode == "None":
+                query = "UPDATE Customers SET Customers.customerName = %s, Customers.customerEmail = %s, Customers.customerPhone = %s, Customers.customerAddress = %s, Customers.customerCity = %s, Customers.customerState = %s, Customers.customerZipcode = NULL WHERE Customers.customerID = %s"
+                cur = mysql.connection.cursor()
+                cur.execute(query, (customerName, customerEmail, customerPhone, customerAddress, customerCity, customerState, customerZipcode, customerID))
+                mysql.connection.commit()
+            # No null inputs
+            else:
+                query = "UPDATE Customers SET Customers.customerName = %s, Customers.customerEmail = %s, Customers.customerPhone = %s, Customers.customerAddress = %s, Customers.customerCity = %s, Customers.customerState = %s, Customers.customerZipcode = %s WHERE Customers.customerID = %s"
+                cur = mysql.connection.cursor()
+                cur.execute(query, (customerName, customerEmail, customerPhone, customerAddress, customerCity, customerState, customerZipcode, customerID))
+                mysql.connection.commit()
+            return redirect("/Customers")
+
+# Boxes routes
+
+@app.route("/Boxes", methods=["POST", "GET"])
+def boxes():
+
+    if request.method == "POST":
+        if request.form.get("Add_Box"):
+            boxType = request.form["boxType"]
+            boxPrice = request.form["boxPrice"]
+            query = "INSERT INTO Boxes(boxType, boxPrice) VALUES (%s, %s)"
+            cur = mysql.connection.cursor()
+            cur.execute(query, (boxType,boxPrice))
+            mysql.connection.commit()
+        return redirect("/Boxes")
+    # Populates Boxes table
+    if request.method == "GET":
+        query = "SELECT boxID, boxType, boxPrice FROM Boxes;"
         cur = mysql.connection.cursor()
-        cur.execute('SELECT * FROM Distributors WHERE distributorID = %s', [distributor_id])
-        distributor = cur.fetchone()
-        cur.close()
-        return render_template('update_distributors.j2', distributor=distributor)
+        cur.execute(query)
+        data = cur.fetchall()
+        return render_template("Boxes.j2", data=data)
 
-    elif request.method == 'POST':
-        name = request.form['distributorName']
-        email = request.form['distributorEmail']
-        phone = request.form['distributorPhone']
-        address = request.form['distributorAddress']
-        city = request.form['distributorCity']
-        state = request.form['distributorState']
-        zipcode = request.form['distributorZipcode']
-        product = request.form['distributorProduct']
-        price = request.form['distributorPrice']
 
+@app.route("/delete_box/<int:boxID>")
+def delete_box(boxID):
+    # mySQL query to delete the purchase with our passed id
+    query = "DELETE FROM Boxes WHERE boxID = %s;"
+    cur = mysql.connection.cursor()
+    cur.execute(query, (boxID,))
+    mysql.connection.commit()
+
+    # redirect back to Boxes page
+    return redirect("/Boxes")
+
+# Distributor_Boxes routes
+
+@app.route("/Distributor_Boxes", methods=["POST", "GET"])
+def distributor_boxes():
+    if request.method == "POST":
+        if request.form.get("Add_Distributor_Box"):
+            distributorName = request.form["distributorName"]
+            boxType = request.form["boxType"]
+            if distributorName == "":
+                query = "INSERT INTO Distributor_Boxes(boxID) VALUES(%s)"
+                cur = mysql.connection.cursor()
+                cur.execute(query, (boxID))
+                mysql.connection.commit()
+            elif boxType == "":
+                query = "INSERT INTO Distributor_Boxes(distributorID) VALUES(%s)"
+                cur = mysql.connection.cursor()
+                cur.execute(query, (distributorID))
+                mysql.connection.commit()
+            else:
+                query = "INSERT INTO Distributor_Boxes(distributorID, boxID) VALUES (%s, %s)"
+                cur = mysql.connection.cursor()
+                cur.execute(query, (distributorID, boxID))
+                mysql.connection.commit()
+            return redirect("/Distributor_Boxes")
+
+    # Populates Distributor_Boxes table
+    if request.method == "GET":
+        query = "SELECT Distributor_Boxes.dandbID, Distributors.distributorName AS Distributor, Boxes.boxType AS boxType FROM Distributor_Boxes INNER JOIN Distributors ON Distributor_Boxes.distributorID = Distributors.distributorID INNER JOIN Boxes ON Distributor_Boxes.boxID = Boxes.boxID;"
         cur = mysql.connection.cursor()
-        cur.execute(
-            """
-            UPDATE Distributors
-            SET distributorName = %s, distributorEmail = %s, distributorPhone = %s,
-                distributorAddress = %s, distributorCity = %s, distributorState = %s,
-                distributorZipcode = %s, distributorProduct = %s, distributorPrice = %s
-            WHERE distributorID = %s
-            """,
-            (name, email, phone, address, city, state, zipcode, product, price, distributor_id)
-        )
-        mysql.connection.commit()
-        cur.close()
+        cur.execute(query)
+        data = cur.fetchall()
 
-        return redirect('/Distributors.j2')
+        query2 = "SELECT boxID, boxType FROM Boxes"
+        cur = mysql.connection.cursor()
+        cur.execute(query2)
+        boxType_data = cur.fetchall()
 
-@app.route("/Distributor_Products.j2")
-def dist_prod():
-    return render_template("Distributor_Products.j2")
+        query2 = "SELECT distributorID, distributorName FROM Distributors"
+        cur = mysql.connection.cursor()
+        cur.execute(query2)
+        distributorName_data = cur.fetchall()
+        return render_template("Distributor_Boxes.j2", data=data, boxTypes=boxType_data, distributorNames=distributorName_data)
 
-@app.route("/Products.j2")
-def products():
-    return render_template("Products.j2")
 
-@app.route("/Purchases.j2")
+@app.route("/delete_distributor_box/<int:dandbID>")
+def delete_distributor_box(dandbID):
+    # mySQL query to delete the distributor with our passed id
+    query = "DELETE FROM Distributor_Boxes WHERE dandbID = %s;"
+    cur = mysql.connection.cursor()
+    cur.execute(query, (dandbID,))
+    mysql.connection.commit()
+
+    # redirect back to Distributor_Boxes page
+    return redirect("/Distributor_Boxes")
+
+# Distributor routes
+
+@app.route("/Distributors", methods=["POST", "GET"])
+def distributors():
+
+    if request.method == "POST":
+        if request.form.get("Add_Distributor"):
+            boxType = request.form["boxType"]
+            distributorName = request.form["distributorName"]
+            distributorEmail = request.form["distributorEmail"]
+            distributorPhone = request.form["distributorPhone"]
+            distributorAddress = request.form["distributorAddress"]
+            distributorCity = request.form["distributorCity"]
+            distributorState = request.form["distributorState"]
+            distributorZipcode = request.form["distributorZipcode"]
+            distributorPrice = request.form["distributorPrice"]
+            # Account for null Email, Phone, and Zipcode
+            if distributorEmail == "" and distributorPhone == "" and distributorZipcode == "":
+                query = "INSERT INTO Distributors(boxID, distributorName, distributorAddress, distributorCity, distributorState, distributorPrice) VALUES (%s, %s, %s, %s, %s, %s)"
+                cur = mysql.connection.cursor()
+                cur.execute(query, (boxType, distributorName, distributorAddress, distributorCity, distributorState, distributorPrice))
+                mysql.connection.commit()
+            # Account for null Email, Phone
+            elif distributorEmail == "" and distributorPhone == "":
+                query = "INSERT INTO Distributors(boxID, distributorName, distributorAddress, distributorCity, distributorState, distributorZipcode, distributorPrice) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+                cur = mysql.connection.cursor()
+                cur.execute(query, (boxType, distributorName, distributorAddress, distributorCity, distributorState, distributorZipcode, distributorPrice))
+                mysql.connection.commit()
+            # Account for null Email, Zipcode
+            elif distributorEmail == "" and distributorZipcode == "":
+                query = "INSERT INTO Distributors(boxID, distributorName, distributorPhone, distributorAddress, distributorCity, distributorState, distributorPrice) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+                cur = mysql.connection.cursor()
+                cur.execute(query, (boxType, distributorName, distributorPhone, distributorAddress, distributorCity, distributorState, distributorPrice))
+                mysql.connection.commit()
+            # Account for null Phone, Zipcode
+            elif distributorPhone == "" and distributorZipcode == "":
+                query = "INSERT INTO Distributors(boxID, distributorName, distributorEmail, distributorAddress, distributorCity, distributorState, distributorPrice) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+                cur = mysql.connection.cursor()
+                cur.execute(query, (boxType, distributorName, distributorEmail, distributorAddress, distributorCity, distributorState, distributorPrice))
+                mysql.connection.commit()
+            # Account for null Email
+            elif distributorEmail == "":
+                query = "INSERT INTO Distributors(boxID, distributorName, distributorPhone, distributorAddress, distributorCity, distributorState, distributorZipcode, distributorPrice) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+                cur = mysql.connection.cursor()
+                cur.execute(query, (boxType, distributorName, distributorPhone, distributorAddress, distributorCity, distributorState, distributorZipcode, distributorPrice))
+                mysql.connection.commit()
+            # Account for null Phone
+            elif distributorPhone == "":
+                query = "INSERT INTO Distributors(boxID, distributorName, distributorEmail, distributorAddress, distributorCity, distributorState, distributorZipcode, distributorPrice) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+                cur = mysql.connection.cursor()
+                cur.execute(query, (boxType, distributorName, distributorEmail, distributorAddress, distributorCity, distributorState, distributorZipcode, distributorPrice))
+                mysql.connection.commit()
+            # Account for null Zipcode
+            elif distributorZipcode == "":
+                query = "INSERT INTO Distributors(boxID, distributorName, distributorEmail, distributorPhone, distributorAddress, distributorCity, distributorState, distributorPrice) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+                cur = mysql.connection.cursor()
+                cur.execute(query, (boxType, distributorName, distributorEmail, distributorPhone, distributorAddress, distributorCity, distributorState, distributorPrice))
+                mysql.connection.commit()
+            # no null inputs
+            else:
+                query = "INSERT INTO Distributors(boxID, distributorName, distributorEmail, distributorPhone, distributorAddress, distributorCity, distributorState, distributorZipcode, distributorPrice) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                cur = mysql.connection.cursor()
+                cur.execute(query, (boxType, distributorName, distributorEmail, distributorPhone, distributorAddress, distributorCity, distributorState, distributorZipcode, distributorPrice))
+                mysql.connection.commit()
+            return redirect("/Distributors")
+            
+    # Populates Distributors table
+    if request.method == "GET":
+        query = "SELECT Distributors.distributorID, Boxes.boxType AS boxType, distributorName, distributorEmail, DistributorPhone, distributorAddress, distributorCity, distributorState, distributorZipcode, distributorPrice FROM Distributors INNER JOIN Boxes ON Distributors.boxID = Boxes.boxID;"
+        cur = mysql.connection.cursor()
+        cur.execute(query)
+        data = cur.fetchall()
+
+        query2 = "SELECT boxID, boxType FROM Boxes"
+        cur = mysql.connection.cursor()
+        cur.execute(query2)
+        boxType_data = cur.fetchall()
+        return render_template("Distributors.j2", data=data, boxTypes=boxType_data)
+
+
+@app.route("/delete_distributor/<int:distributorID>")
+def delete_distributor(distributorID):
+    # mySQL query to delete the distributor with our passed id
+    query = "DELETE FROM Distributors WHERE distributorID = %s;"
+    cur = mysql.connection.cursor()
+    cur.execute(query, (distributorID,))
+    mysql.connection.commit()
+
+    # redirect back to Distributors page
+    return redirect("/Distributors")
+
+# Purchase routes
+
+@app.route("/Purchases", methods=["POST", "GET"])
 def purchases():
-    return render_template("Purchases.j2")
+
+    if request.method == "POST":
+        if request.form.get("Add_Purchase"):
+            customerName = request.form["customerName"]
+            boxType = request.form["boxType"]
+            purchaseDate = request.form["purchaseDate"]
+            purchaseRevenue = request.form["purchaseRevenue"]
+            query = "INSERT INTO Purchases(customerID, boxID, purchaseDate, purchaseRevenue) VALUES (%s, %s, %s, %s)"
+            cur = mysql.connection.cursor()
+            cur.execute(query, (customerID, boxID, purchaseDate, purchaseRevenue))
+            mysql.connection.commit()
+        return redirect("/Purchases")
+    # Populates Purchases table
+    if request.method == "GET":
+        query = "SELECT Purchases.purchaseID, Customers.customerName AS customerName, Boxes.boxType AS boxType, purchaseDate, purchaseRevenue FROM Purchases INNER JOIN Customers ON Purchases.customerID = Customers.customerID INNER JOIN Boxes ON Purchases.boxID = Boxes.boxID;"
+        cur = mysql.connection.cursor()
+        cur.execute(query)
+        data = cur.fetchall()
+
+        query2 = "SELECT boxID, boxType FROM Boxes;"
+        cur = mysql.connection.cursor()
+        cur.execute(query2)
+        boxType_data = cur.fetchall()
+
+        query2 = "SELECT customerID, customerName FROM Customers;"
+        cur = mysql.connection.cursor()
+        cur.execute(query2)
+        customerName_data = cur.fetchall()
+        return render_template("Purchases.j2", data = data, boxTypes=boxType_data, customerNames=customerName_data)
+
+
+@app.route("/delete_purchase/<int:purchaseID>")
+def delete_purchase(purchaseID):
+    # mySQL query to delete the purchase with our passed id
+    query = "DELETE FROM Purchases WHERE purchaseID = %s;"
+    cur = mysql.connection.cursor()
+    cur.execute(query, (purchaseID,))
+    mysql.connection.commit()
+
+    # redirect back to Purchases page
+    return redirect("/Purchases")
+
 # Listener
 
 if __name__ == "__main__":
-    port = int(os.environ.get('PORT', 1989)) 
+    port = int(os.environ.get('PORT', 1990)) 
  
-    app.run(port=port, debug=True) 
+    app.run(port=port, debug=True)

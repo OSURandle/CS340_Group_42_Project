@@ -1,90 +1,130 @@
+<!-- This file is adapted from the people example code-->
 <html>
 <head>
-<title>Products</title>
+<title>Purchases</title>
 <link href="style.css" rel="stylesheet" type="text/css" />
 <script language="JavaScript">
 		function showform(dowhat) {
 			/*
-			* four DIVS: browse, insert, delete
+			* four DIVS: browse, insert, edit, delete
 			* this function sets one visible the others not
 			*/
 			if (dowhat == 'insert'){
 				document.getElementById('browse').style.display = 'none';
 				document.getElementById('insert').style.display = 'block';
+				document.getElementById('edit').style.display = 'none';
 				document.getElementById('delete').style.display = 'none';
+			}
+			else if (dowhat == 'edit'){
+				document.getElementById('browse').style.display = 'none';
+				document.getElementById('insert').style.display = 'none';
+				document.getElementById('edit').style.display = 'block';
+				document.getElementById('delete').style.display = 'none';
+			}
+			else if (dowhat == 'delete'){
+				document.getElementById('browse').style.display = 'none';
+				document.getElementById('insert').style.display = 'none';
+				document.getElementById('edit').style.display = 'none';
+				document.getElementById('delete').style.display = 'block';
 			}
       else if (dowhat == 'all'){
 				document.getElementById('browse').style.display = 'block';
 				document.getElementById('insert').style.display = 'block';
+				document.getElementById('edit').style.display = 'block';
 				document.getElementById('delete').style.display = 'block';
 			}
 			else { //by default display browse
 				document.getElementById('browse').style.display = 'block';
 				document.getElementById('insert').style.display = 'none';
+				document.getElementById('edit').style.display = 'none';
 				document.getElementById('delete').style.display = 'none';
 			}
 		}
-    function newPurchases() { showform('insert'); }
+    function newPurchase() { showform('insert'); }
+    function editPurchase(purchaseID) { showform('edit'); }
+    function deletePurchase(purchaseID) { showform ('delete'); }
     function browsePurchases() { showform ('browse'); }
     function showAll() { showform ('all'); }
-</script>
+    </script>
 </head>
 
 <body onload="browsePurchases()">
-<h1>Purchases</h1>
+    <h1>Purchases</h1>
 
-[ <a href="Distributors.j2">Distributors</a> | <a href="/">Customers</a> | <a href="Boxes.j2">Boxes</a> | <a href="Products.j2">Products</a> | <a href="Distributor_Products.j2">Distributor_Products</a> | <a href = "Purchases.j2">Purchases</a> ]
-<div id="browse">
-<p><a href="#" onClick="showAll()">Display all forms</a> (click here to show all the forms for creating, updating or deleting data) </p>
-<table border="1" cellpadding="5">
-  <tr>
-    <th><a href="#" onClick="newPurchases()">New</a></th>
-    <th>productID</th>
-    <th>purchaseID</th>
-    <th>customerID</th>
-    <th>purchaseDate</th>
-    <th>purchaseRevenue</th>
-  </tr>
-  <tr>
-    <th> </th>
-    <td align="right">1</td>
-    <td align="right">2</td>
-    <td align="right">1</td>
-    <td>2023-02-07</td>
-    <td>10.00</td>
-  </tr>
-  <tr>
-    <th> </th>
-    <td align="right">2</td>
-    <td align="right">1</td>
-    <td align="right">2</td>
-    <td>2022-12-23</td>
-    <td>20.00</td>
-  </tr>
-  <tr>
-    <th> </th>
-    <td align="right">3</td>
-    <td align="right">3</td>
-    <td align="right">3</td>
-    <td>2023-01-14</td>
-    <td>30.00</td>
-  </tr>
-</table>
-<p>&nbsp;</p>
-</div> <!-- browse -->
-<div id="insert">
-    <form method="POST" id="addPurchases">
-        <legend><strong>Add Purchases</strong></legend>
-          <fieldset class="fields">
-            <label> customerID </label> <input type="text" name="customerID">
-            <label> productID </label> <input type = "text" name = "productID">
-            <label> purchaseDate </label> <input type = "text" name = "purchaseDate">
-            <label> Revenue </label> <input type = "text" name = "Revenue">
-      </fieldset>
-          <input class="btn" type="submit" id="addPurchases" value="Add Purchases">
-          <input class="btn" type="button" value="cancel" onClick="browsePurchasess()">
-	</form> 
+    [ <a href="Index">Home</a> | <a href="Distributors">Distributors</a> | <a href="Customers">Customers</a> | <a href="Boxes">Boxes</a> | <a href="Distributor_Boxes">Distributor_Boxes</a> | <a href = "Purchases">Purchases</a>]
+    <div id="browse">
+	    <p><a href="#" onClick="newPurchase()">Add New</a> </p>
+	    <table border="1" cellpadding="5">
+            <!-- Access data tuple passed from app.py --> 
+            {% if data %}
+			    <thead>
+				    <tr>
+					    <!-- Iterate through each key in the first entry to get the column name -->
+                        {% for key in data[0].keys() %}
+					    
+                        <!-- Create a <th> tag with the key inside of it, this will be our header row -->
+					    <th scope="col" data-field="{{ key }}" data-filter-control="input">{{ key }}</th>
+					
+                        <!-- End of this for loop -->
+                        {% endfor %} 
+                    </tr>
 
+			    <tbody>
+				    <!-- Now, iterate through every item in data -->{% for item in data %}
+					    <tr>
+						    <!-- Then iterate through every key in the current item dictionary -->
+                            {% for key in item.keys() %}
+
+						    <!-- Create a <td> element with the value of that key in it -->
+						    <td> {{item[key]}} </td> 
+                            {% endfor %}
+
+                            <!-- Create our edit/delete buttons -->
+						    
+						    <td><a href="delete_purchase/{{item.purchaseID}}" class="btn btn-default">Delete</a></td>
+
+					    </tr> 
+                        {% endfor %} 
+                {% endif %} 
+            </table>   
+        <p>&nbsp;</p>
+        </div>	<!-- browse -->
+
+    <div id="insert">
+        <form id ="insertPurchase" action="/Purchases" method="post">
+            <legend><strong>Add Purchase</strong></legend>
+            <fieldset class="fields">
+                <label> Customer Name </label>
+				<select class="form-control" id="customerName" name="customerName" pattern="[0-4]{1}" placeholder="" required>
+                	<option value="0" selected>Select a customer name</option>
+
+                	{% for customerName in customerNames %}
+                    	{% if customerName['customerID'] == customerID %}
+                        	<option value="{{ customerName['customerID'] }}" selected>{{ customerName['customerName'] }}</option>
+                    	{% else %}
+                        	<option value="{{ customerName['customerID'] }}">{{ customerName['customerName'] }}</option>
+                    	{% endif %}
+                	{% endfor %}
+            	</select>
+				<label> boxType </label> 
+            	<select class="form-control" id="boxType" name="boxType" pattern="[0-4]{1}" placeholder="" required> 
+                	<option value="0" selected>Select a box type</option>
+
+                	{% for boxType in boxTypes %}
+                    	{% if boxType['boxID'] == boxID %}
+                        	<option value="{{ boxType['boxID'] }}" selected>{{ boxType['boxType'] }}</option>
+                    	{% else %}
+                        	<option value="{{ boxType['boxID'] }}">{{ boxType['boxType'] }}</option>
+                    	{% endif %}
+                	{% endfor %}
+            	</select>
+                <label> purchaseDate </label> <input type = "text" name = "purchaseDate">
+                <label> purchaseRevenue </label> <input type = "text" name = "purchaseRevenue">
+            </fieldset>
+			<input type="submit" value="Add Purchase" name="Add_Purchase" class="btn btn-primary" style="margin:.5rem;">
+			<input class="btn" type="button" value="Cancel" onClick="browsePurchases()">
+	    </form> 
+    </div><!-- insert -->
 
 </body>
 </html>
