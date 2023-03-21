@@ -48,7 +48,6 @@ def customers():
             customerCity = request.form["customerCity"]
             customerState = request.form["customerState"]
             customerZipcode = request.form["customerZipcode"]
-<<<<<<< HEAD
             # Account for null Email, Phone, and Zipcode
             if customerEmail == "" and customerPhone == "" and customerZipcode == "":
                 query = "INSERT INTO Customers(customerName, customerAddress, customerCity, customerState) VALUES (%s, %s, %s, %s)"
@@ -98,13 +97,6 @@ def customers():
                 cur.execute(query, (customerName, customerEmail, customerPhone, customerAddress, customerCity, customerState, customerZipcode))
                 mysql.connection.commit()
             return redirect("/Customers")
-=======
-            query = "INSERT INTO Customers(customerName, customerEmail, customerPhone, customerAddress, customerCity, customerState, customerZipcode) VALUES (%s, %s, %s, %s, %s, %s, %s)"
-            cur = mysql.connection.cursor()
-            cur.execute(query, (customerName, customerEmail, customerPhone, customerAddress, customerCity, customerState, customerZipcode))
-            mysql.connection.commit()
-        return redirect("/Customers")
->>>>>>> 5169bc70310ff108c357c6f362558b997d4253f8
     # Populates Customers table
     if request.method == "GET":
         query = "SELECT customerID, customerName, customerEmail, customerPhone, customerAddress, customerCity, customerState, customerZipcode FROM Customers;"
@@ -116,11 +108,7 @@ def customers():
 
 @app.route("/delete_customer/<int:customerID>")
 def delete_customer(customerID):
-<<<<<<< HEAD
     # mySQL query to delete the customers with our passed id
-=======
-    # mySQL query to delete the planet with our passed id
->>>>>>> 5169bc70310ff108c357c6f362558b997d4253f8
     query = "DELETE FROM Customers WHERE customerID = %s;"
     cur = mysql.connection.cursor()
     cur.execute(query, (customerID,))
@@ -148,7 +136,6 @@ def edit_Customers(customerID):
             customerCity = request.form["customerCity"]
             customerState = request.form["customerState"]
             customerZipcode = request.form["customerZipcode"]
-<<<<<<< HEAD
             # Account for null Email, Phone, and Zipcode
             if (customerEmail == "" or customerEmail == "None") and (customerPhone == "" or customerPhone == "None") and (customerZipcode == "" or customerZipcode == "None"):
                 query = "UPDATE Customers SET Customers.customerName = %s, Customers.customerEmail = NULL, Customers.customerPhone = NULL, Customers.customerAddress = %s, Customers.customerCity = %s, Customers.customerState = %s, Customers.customerZipcode = NULL WHERE Customers.customerID = %s"
@@ -197,12 +184,6 @@ def edit_Customers(customerID):
                 cur = mysql.connection.cursor()
                 cur.execute(query, (customerName, customerEmail, customerPhone, customerAddress, customerCity, customerState, customerZipcode, customerID))
                 mysql.connection.commit()
-=======
-            query = "UPDATE Customers SET Customers.customerName = %s, Customers.customerEmail = %s, Customers.customerPhone = %s, Customers.customerAddress = %s, Customers.customerCity = %s, Customers.customerState = %s, Customers.customerZipcode = %s WHERE Customers.customerID = %s"
-            cur = mysql.connection.cursor()
-            cur.execute(query, (customerName, customerEmail, customerPhone, customerAddress, customerCity, customerState, customerZipcode, customerID))
-            mysql.connection.commit()
->>>>>>> 5169bc70310ff108c357c6f362558b997d4253f8
             return redirect("/Customers")
 
 # Boxes routes
@@ -230,16 +211,11 @@ def boxes():
 
 @app.route("/delete_box/<int:boxID>")
 def delete_box(boxID):
-<<<<<<< HEAD
     # mySQL query to delete the purchase with our passed id
-=======
-    # mySQL query to delete the planet with our passed id
->>>>>>> 5169bc70310ff108c357c6f362558b997d4253f8
     query = "DELETE FROM Boxes WHERE boxID = %s;"
     cur = mysql.connection.cursor()
     cur.execute(query, (boxID,))
     mysql.connection.commit()
-<<<<<<< HEAD
 
     # redirect back to Boxes page
     return redirect("/Boxes")
@@ -255,17 +231,17 @@ def distributor_boxes():
             if distributorName == "":
                 query = "INSERT INTO Distributor_Boxes(boxID) VALUES(%s)"
                 cur = mysql.connection.cursor()
-                cur.execute(query, (boxID))
+                cur.execute(query, (boxType))
                 mysql.connection.commit()
             elif boxType == "":
                 query = "INSERT INTO Distributor_Boxes(distributorID) VALUES(%s)"
                 cur = mysql.connection.cursor()
-                cur.execute(query, (distributorID))
+                cur.execute(query, (distributorName))
                 mysql.connection.commit()
             else:
                 query = "INSERT INTO Distributor_Boxes(distributorID, boxID) VALUES (%s, %s)"
                 cur = mysql.connection.cursor()
-                cur.execute(query, (distributorID, boxID))
+                cur.execute(query, (distributorName, boxType))
                 mysql.connection.commit()
             return redirect("/Distributor_Boxes")
 
@@ -403,7 +379,7 @@ def purchases():
             purchaseRevenue = request.form["purchaseRevenue"]
             query = "INSERT INTO Purchases(customerID, boxID, purchaseDate, purchaseRevenue) VALUES (%s, %s, %s, %s)"
             cur = mysql.connection.cursor()
-            cur.execute(query, (customerID, boxID, purchaseDate, purchaseRevenue))
+            cur.execute(query, (customerName, boxType, purchaseDate, purchaseRevenue))
             mysql.connection.commit()
         return redirect("/Purchases")
     # Populates Purchases table
@@ -442,20 +418,3 @@ if __name__ == "__main__":
     port = int(os.environ.get('PORT', 1990)) 
  
     app.run(port=port, debug=True)
-=======
-
-    # redirect back to Boxes page
-    return redirect("/Boxes")
-
-# Distributor routes
-
-# Distributor_Boxes routes
-
-# Purchase routes
-# Listener
-
-if __name__ == "__main__":
-    port = int(os.environ.get('PORT', 1919)) 
- 
-    app.run(port=port, debug=True)
->>>>>>> 5169bc70310ff108c357c6f362558b997d4253f8

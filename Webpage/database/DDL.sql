@@ -1,78 +1,102 @@
 -- Joshua Randle
 -- Edward G Breard
 -- Group 42
+SET FOREIGN_KEY_CHECKS = 0;
+SET AUTOCOMMIT = 0;
 
--- READ/SELECT Statements
+-- Create or replace tables
 
--- Customers 
-SELECT customerID, customerName, customerEmail, customerPhone, customerAddress, customerCity, customerState, customerZipcode FROM Customers;
+CREATE OR REPLACE TABLE Customers(
+    customerID int(10) AUTO_INCREMENT NOT NULL,
+    customerName varchar(150) NOT NULL,
+    customerEmail varchar(100) NULL,
+    customerPhone varchar(40) NULL,
+    customerAddress varchar(100) NOT NULL,
+    customerCity varchar(50) NOT NULL,
+    customerState varchar(50) NOT NULL,
+    customerZipcode varchar(10) NULL,
+    PRIMARY KEY(customerID)
+);
 
--- Boxes
-SELECT boxID, boxType, boxPrice FROM Boxes;
+CREATE OR REPLACE TABLE Boxes (
+    boxID INT(10) AUTO_INCREMENT NOT NULL,
+    boxType VARCHAR(50) NOT NULL UNIQUE,
+    boxPrice decimal(10,2) NOT NULL,
+    PRIMARY KEY(boxID)
+);
 
--- Distributors
-SELECT Distributors.distributorID, Boxes.boxType AS boxType, distributorName, distributorEmail, DistributorPhone, distributorAddress, distributorCity, distributorState, distributorZipcode, distributorPrice FROM Distributors INNER JOIN Boxes ON Distributors.boxID = Boxes.boxID;
+CREATE OR REPLACE TABLE Distributors(
+    distributorID int(10) AUTO_INCREMENT NOT NULL,
+    boxID int(10) NOT NULL,
+    distributorName varchar(50) NOT NULL,
+    distributorEmail varchar(100) NULL,
+    distributorPhone varchar(40) NULL,
+    distributorAddress varchar(100) NOT NULL,
+    distributorCity varchar(50) NOT NULL,
+    distributorState varchar(50) NOT NULL,
+    distributorZipcode int(10) NULL,
+    distributorPrice decimal(10,2) NOT NULL,
+    PRIMARY KEY(distributorID),
+    FOREIGN KEY (boxID) REFERENCES Boxes(boxID)
+    ON DELETE CASCADE
+);
 
--- Distributor_Boxes
-SELECT Distributor_Boxes.dandbID, Distributors.distributorName AS Distributor, Boxes.boxType AS boxType FROM Distributor_Boxes INNER JOIN Distributors ON Distributor_Boxes.distributorID = Distributors.distributorID INNER JOIN Boxes ON Distributor_Boxes.boxID = Boxes.boxID;
 
--- Purchases
-SELECT Purchases.purchaseID, Customers.customerName AS customerName, Boxes.boxType AS boxType, purchaseDate, purchaseRevenue FROM Purchases INNER JOIN Customers ON Purchases.customerID = Customers.customerID INNER JOIN Boxes ON Purchases.boxID = Boxes.boxID;
+CREATE OR REPLACE TABLE Distributor_Boxes(
+    dandbID int NOT NULL AUTO_INCREMENT,
+    distributorID INT(10) NULL,
+    boxID INT(10) NULL,
+    PRIMARY KEY(dandbID),
+    FOREIGN KEY(distributorID) REFERENCES Distributors(distributorID)
+    ON DELETE CASCADE,
+    FOREIGN KEY(boxID) REFERENCES Boxes(boxID)
+    ON DELETE CASCADE
+);
 
+CREATE OR REPLACE TABLE Purchases(
+    purchaseID int(10) AUTO_INCREMENT NOT NULL,
+    customerID int(10) NOT NULL,
+    boxID int(10) NOT NULL,
+    purchaseDate date NOT NULL,
+    purchaseRevenue decimal (10,2) NOT NULL,
+    PRIMARY KEY(purchaseID),
+    FOREIGN KEY(boxID) REFERENCES Boxes(boxID)
+    ON DELETE CASCADE,
+    FOREIGN KEY(customerID) REFERENCES Customers(customerID)
+    ON DELETE CASCADE
+);
 
--- CREATE Statements
-
--- Customers
+-- Insert Data into Tables
 INSERT INTO Customers(customerName, customerEmail, customerPhone, customerAddress, customerCity, customerState, customerZipcode)
-VALUES (:customerName_input, :customerEmail_input, :customerPhone_input, :customerAddress_input, :customerCity_input, :customerState_input, :customerZipcode_input);
+    VALUES('Greg Abbot', 'gabb@gmail.com', '764-678-9873', '435 Looney Way', 'Houston', 'Texas', '39859'),
+    ('Courtney Smith', 'csmith@gmail.com', '869-431-5465', '4357 Charity Lane', 'Salem', 'Massachusets', '85404'),
+    ('Felix Harding', 'fharding@gmail.com', '687-345-0968', '235 Wallaby Way', 'Panama City', 'Florida', '38756');
 
--- Boxes
 INSERT INTO Boxes(boxType, boxPrice)
-VALUES (:boxType_input, :boxPrice_input);
+    VALUES('Lean Meats', 30.00),
+    ('Seafood', 40.00),
+    ('Veggie', 25.00),
+    ('Fruit', 25.00),
+    ('Nuts and Seeds', 20.00);
 
--- Distributors
 INSERT INTO Distributors(boxID, distributorName, distributorEmail, distributorPhone, distributorAddress, distributorCity, distributorState, distributorZipcode, distributorPrice)
-VALUES (:boxID_dropdown_input, :distributorName_input, :distributorEmail_input, :distributorPhone_input, :distributorAddress_input, :distributorCity_input, :distributorState_input, :distributorZipcode_input, :distributorPrice_input);
+    VALUES((SELECT boxID from Boxes WHERE boxType = 'Lean Meats'),'Farmer Jack', 'leaner@gmail.com', '498-768-4823', '4345 Shoulder Lane', 'Vicksburg', 'Mississippi', '39768', 10.00),
+    ((SELECT boxID from Boxes WHERE boxType = 'Fruit'), 'Fruit-Surplus', 'crazyfruit@yahoo.com', '473-584-3623', '473 Cluck Road', 'Gainesville', 'Florida', '83430', 5.00),
+    ((SELECT boxID from Boxes WHERE boxType = 'Nuts and Seeds'), 'Nut-and-Seed-Palace', 'buckwheat@hotmail.com', '483-584-3421', '892 Seedy Drive', 'Dayton', 'Georgia', '58493', 12.00);
 
--- Distributor_Boxes
+
 INSERT INTO Distributor_Boxes(distributorID, boxID)
-VALUES (:distributorID_input, :boxID_dropdown_input);
+    VALUES ((SELECT distributorID FROM Distributors WHERE distributorName = 'Farmer Jack'), (SELECT boxID FROM Boxes WHERE boxType = 'Nuts and Seeds')),
+    ((SELECT distributorID FROM Distributors WHERE distributorName = 'Farmer Jack'), (SELECT boxID FROM Boxes WHERE boxType = 'Fruit')),
+    ((SELECT distributorID FROM Distributors WHERE distributorName = 'Nut-and-Seed-Palace'), (SELECT boxID FROM Boxes WHERE boxType = 'Lean Meats'));
+    
+Insert INTO Purchases(customerID, boxID, purchaseDate, purchaseRevenue)
+    VALUES((SELECT customerID FROM Customers WHERE customerName ='Greg Abbot'), (SELECT boxID FROM Boxes WHERE boxType = 'Nuts and Seeds'), '2023-02-07', 15.00),
+    ((SELECT customerID FROM Customers WHERE customerName ='Courtney Smith'), (SELECT boxID FROM Boxes WHERE boxType = 'Lean Meats'),'2022-12-23', 20.00),
+    ((SELECT customerID FROM Customers WHERE customerName ='Felix Harding'), (SELECT boxID FROM Boxes WHERE boxType = 'Fruit'),'2023-01-14', 30.00);
 
--- Purchases
-INSERT INTO Purchases(customerID, boxID, purchaseDate, purchaseRevenue)
-VALUES (:customerID_input, :boxID_dropdown_input, :purchaseDate_input, :purchaseRevenue_input)
+    
 
 
--- UPDATE Customers
-UPDATE Customers
-SET customerName = :customerName_input, customerEmail = :customerEmail_input, customerPhone = :customerPhone_input, customerAddress = :customerAddress_input, customerCity = :customerCity_input, customerState = :customerState_input, customerZipcode = :customerZipcode_input
-WHERE customerID = :customerID_update_input;
-
--- UPDATE Distributor_Boxes
-UPDATE Distributor_Boxes
-SET distributorID = :distributorID_input, boxID = :boxID_dropdown_input
-WHERE dandbID = :dandbID_input;
-
--- DELETE Distributors
-DELETE FROM Distributors WHERE distributorID = :distributorID_user_selected_input;
-
--- DELETE Distributor_Boxes
-DELETE FROM Distributor_Boxes WHERE dandbID = :dandbID_user_selected_input;
-
--- DELETE Customers
-DELETE FROM Customers WHERE customerID = :customerID_user_selected_input;
-
--- DELETE Boxes
-DELETE FROM Boxes WHERE boxID = :boxID_user_selected_input;
-
--- DELETE Purchases
-DELETE FROM Purchases WHERE purchaseID = :purchaseID_user_selected_input;
-
--- DropDown Boxes
-SELECT boxID, boxType FROM Boxes;
-
--- DropDown Distributors
-SELECT distributorID, distributorName FROM Distributors;
-
--- DropDown Customers
-SELECT customerID, customerName FROM Customers;
+SET FOREIGN_KEY_CHECKS =1;
+COMMIT;

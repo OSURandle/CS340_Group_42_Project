@@ -1,6 +1,11 @@
 <!-- This file is adapted from the people example code-->
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="static/css/style.css">
 <title>Distributor_Boxes</title>
 <link href="style.css" rel="stylesheet" type="text/css" />
 <script language="JavaScript">
@@ -54,7 +59,7 @@
     [ <a href="Index">Home</a> | <a href="Distributors">Distributors</a> | <a href="Customers">Customers</a> | <a href="Boxes">Boxes</a> | <a href="Distributor_Boxes">Distributor_Boxes</a> | <a href = "Purchases">Purchases</a>]
     <div id="browse">
 	      <p><a href="#" onClick="newDistributor_Box()">Add New</a> </p>
-	      <table border="1" cellpadding="5">
+	      <table border="1" cellpadding="5" class="center">
             <!-- Access data tuple passed from app.py --> 
             {% if data %}
 			        <thead>

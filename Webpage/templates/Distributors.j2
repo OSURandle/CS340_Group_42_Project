@@ -1,6 +1,11 @@
 <!-- This file is adapted from the people example code-->
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="static/css/style.css">
 <title>Distributors</title>
 <link href="style.css" rel="stylesheet" type="text/css" />
 <script language="JavaScript">
@@ -54,7 +59,7 @@
     [ <a href="Index">Home</a> | <a href="Distributors">Distributors</a> | <a href="Customers">Customers</a> | <a href="Boxes">Boxes</a> | <a href="Distributor_Boxes">Distributor_Boxes</a> | <a href = "Purchases">Purchases</a>]
     <div id="browse">
 	    <p><a href="#" onClick="newDistributor()">Add New</a> </p>
-	    <table border="1" cellpadding="5">
+	    <table border="1" cellpadding="5" class="center">
             <!-- Access data tuple passed from app.py --> 
             {% if data %}
 			    <thead>
@@ -69,7 +74,6 @@
                         {% endfor %} 
                     </tr>
 
-<<<<<<< HEAD
 			    <tbody>
 				    <!-- Now, iterate through every item in data -->{% for item in data %}
 					    <tr>
@@ -119,102 +123,6 @@
 			<input class="btn" type="button" value="Cancel" onClick="browseDistributors()">
 	    </form> 
     </div><!-- insert -->
-=======
-<div id="browse">
-<p><a href="#" onClick="showAll()">Display all forms</a> (click here to show all the forms for creating, updating or deleting data) </p>
-<table border="1" cellpadding="5">
-  <tr>
-    <th><a href="#" onClick="newDistributor()">New</a></th>
-    <th>distributorID</th>
-    <th>boxID</th>
-    <th>Name</th>
-    <th>Email</th>
-    <th>Phone</th>
-    <th>Address</th>
-    <th>City</th>
-    <th>State</th>
-    <th>Zipcode</th>
-    <th>Product</th>
-    <th>Price</th>
-  </tr>
-  <tr>
-    <td><a href="#" onclick="deleteDistributor('this.distributorID')">Delete</a></td>
-    <td align="right">1</td>
-    <td align="right">4</td>
-    <td>Farmer Jack</td>
-    <td>leaner@gmail.com</td>
-    <td>498-768-4823</td>
-    <td>4345 Shoulder Lane</td>
-    <td>Vicksburg</td>
-    <td>Mississippi</td>
-    <td>39768</td>
-    <td>Lean Meats</td>
-    <td>10.00</td>
-  </tr>
-  <tr>
-    <td><a href="#" onclick="deleteDistributor('this.distributorID')">Delete</a></td>
-    <td align="right">1</td>
-    <td align="right">4</td>
-    <td>Fruit-Surplus</td>
-    <td>crazyfruit@gmail.com</td>
-    <td>473-584-3623</td>
-    <td>473 Cluck Road</td>
-    <td>Gainesville</td>
-    <td>Florida</td>
-    <td>83430</td>
-    <td>Fruit</td>
-    <td>5.00</td>
-  </tr>
-  <tr>
-    <td><a href="#" onclick="deleteDistributor('this.distributorID')">Delete</a></td>
-    <td align="right">3</td>
-    <td align="right">5</td>
-    <td>Nut-and-Seed-Palace</td>
-    <td>buckwheat@gmail.com</td>
-    <td>483-584-3421</td>
-    <td>892 Seedy Drive</td>
-    <td>Dayton</td>
-    <td>Georgia</td>
-    <td>58493</td>
-    <td>Nuts and Seeds</td>
-    <td>12.00</td>
-  </tr>
-</table>
-<p>&nbsp;</p>
-</div> <!-- browse -->
-<div id="insert">
-    <form method="POST" id="addDistributor">
-        <legend><strong>Add Distributor</strong></legend>
-          <fieldset class="fields">
-            <label> Name </label> <input type="text" name="distributorName">
-            <label> Email </label> <input type="text" name="distributorEmail">
-            <label> Phone </label> <input type = "text" name = "distributorPhone">
-            <label> Address </label> <input type = "text" name = "distributorAddress">
-            <label> City </label> <input type = "text" name = "distributorCity">
-            <label> State </label> <input type = "text" name = "distributorState">
-            <label> Zipcode </label> <input type = "text" name = "distributorZipcode">
-            <label> Product </label> <input type = "text" name = "distributorProduct">
-            <label> Price </label> <input type = "text" name = "distributorPrice">
-      </fieldset>
-          <input class="btn" type="submit" id="addDistributor" value="Add Distributor">
-          <input class="btn" type="button" value="cancel" onClick="browseDistributors()">
-	</form> 
-</div><!-- insert -->
-<p>&nbsp;</p>
-<div id="delete" style="display: block">
-  <form method="POST" id="deleteDistributor">
-      <legend><strong>Delete Distributor</strong></legend>
-          <fieldset class="fields">
-          <p>Are you sure you wish to delete the following?</p>
-          <input type="hidden" name="distributorID" id="deletedistributorID" value="1">
-          
-            
-    </fieldset>
-    <input class="btn" type="submit" id="DeleteDistributor" value="Delete Distributor">
-          <input class="btn" type="button" value="cancel" onClick="browseDistributors()">
-  </form> 
-</div><!-- delete -->
->>>>>>> 5169bc70310ff108c357c6f362558b997d4253f8
 
 
 </body>
