@@ -1,4 +1,6 @@
-# This file is adapted from the people example code
+# -gkochera(March 2020) flask-starter-app(Version 1.0) [Github Repo Source Code] https://github.com/osu-cs340-ecampus/flask-  starter-app.git
+# - citation scope: bsg_people_app module
+#  - Originality: Based on the CS 340 bsg_people_app starter code with exception of contents of the bsg_people_app
 from flask import Flask, render_template, json, redirect
 from flask_mysqldb import MySQL
 from flask import request

@@ -1,4 +1,6 @@
-<!-- This file is adapted from the people example code-->
+<!-- # -gkochera(March 2020) flask-starter-app(Version 1.0) [Github Repo Source Code] https://github.com/osu-cs340-ecampus/flask-  starter-app.git
+# - citation scope: bsg_people_app module
+#  - Originality: Based on the CS 340 bsg_people_app starter code with exception of contents of the bsg_people_app-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -56,10 +58,10 @@
 <body onload="browseDistributor_Boxes()">
     <h1>Distributor_Boxes</h1>
 
-    [ <a href="Index">Home</a> | <a href="Distributors">Distributors</a> | <a href="Customers">Customers</a> | <a href="Boxes">Boxes</a> | <a href="Distributor_Boxes">Distributor_Boxes</a> | <a href = "Purchases">Purchases</a>]
+    <nav>[ <a href="Index">Home</a> | <a href="Distributors">Distributors</a> | <a href="Customers">Customers</a> | <a href="Boxes">Boxes</a> | <a href="Distributor_Boxes">Distributor_Boxes</a> | <a href = "Purchases">Purchases</a>]</nav>
     <div id="browse">
 	      <p><a href="#" onClick="newDistributor_Box()">Add New</a> </p>
-	      <table border="1" cellpadding="5" class="center">
+	      <table border="1" cellpadding="5" class="centertable">
             <!-- Access data tuple passed from app.py --> 
             {% if data %}
 			        <thead>
