@@ -18,6 +18,11 @@ Purchases and Customers tables have a one-to-many relationship, where one purcha
 
 Citations:
 
-gkochera(March 2020) flask-starter-app(Version 1.0) [Github Repo Source Code] https://github.com/osu-cs340-ecampus/flask-starter-app.git
+-gkochera(March 2020) flask-starter-app(Version 1.0) [Github Repo Source Code] https://github.com/osu-cs340-ecampus/flask-  starter-app.git
+  - citation scope: bsg_people_app module
+  - Originality: Based on the CS 340 bsg_people_app starter code with exception of contents of the bsg_people_app
+  
 
 w3schools(March 2020) CSS Tutorial(Version N/A) [Tutorial Source Code] https://www.w3schools.com/css/ 
+  - citation scope: tutorials for background image, table structures, and text alignment
+  - Originality: Adapted from CSS Tutorials by w3schools with exception of original variable contents
