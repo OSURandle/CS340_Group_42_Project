@@ -15,3 +15,9 @@ Distributors and Distributor_Boxes tables have a many-to-many relationship, wher
 Purchases and Boxes tables have a one-to-many relationship, where one purchase can be for one type of box, but each box can be purchased many times. The boxID field in the Purchases table is a foreign key that references the boxID field in the Boxes table.
 
 Purchases and Customers tables have a one-to-many relationship, where one purchase can be made by one customer, but each customer can make many purchases. The customerID field in the Purchases table is a foreign key that references the customerID field in the Customers table.
+
+Citations:
+
+gkochera(March 2020) flask-starter-app(Version 1.0) [Github Repo Source Code] https://github.com/osu-cs340-ecampus/flask-starter-app.git
+
+w3schools(March 2020) CSS Tutorial(Version N/A) [Tutorial Source Code] https://www.w3schools.com/css/ 
